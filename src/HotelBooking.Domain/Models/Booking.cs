@@ -9,7 +9,7 @@ public class Booking
     public DateOnly CheckIn { get; set; }
     public DateOnly CheckOut { get; set; }
     public decimal TotalPrice { get; set; }
-    public BookingStatus Status { get; set; } = BookingStatus.Confirmed;
+    public BookingStatus Status { get; set; } = BookingStatus.Pending;
     public string IdempotencyKey { get; set; } = default!;
     public DateTime CreatedAtUtc { get; set; }
 

@@ -1,0 +1,84 @@
+﻿@model dynamic
+
+@{
+    ViewData["Title"] = "All Bookings";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if (TempData["error"] is string err)
+{
+    <div class="alert alert-danger">@err</div>
+}
+@if (TempData["ok"] is string ok)
+{
+    <div class="alert alert-success">@ok</div>
+}
+
+<h2>All Bookings</h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>User ID</th>
+            <th>Room ID</th>
+            <th>Check-in</th>
+            <th>Check-out</th>
+            <th>Total Price</th>
+            <th>Status</th>
+            <th>Actions</th>
+            <th>Created</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var b in Model)
+        {
+            <tr>
+                <td>@b.Id</td>
+                <td>@b.UserId</td>
+                <td>@b.RoomId</td>
+                <td>@b.CheckIn.ToString("dd.MM.yyyy")</td>
+                <td>@b.CheckOut.ToString("dd.MM.yyyy")</td>
+                <td>@b.TotalPrice.ToString("0.00")</td>
+                <td>
+                    @switch (b.Status)
+                    {
+                        case HotelBooking.Domain.Enums.BookingStatus.Pending:
+                            <span class="badge bg-warning">Pending</span>
+                            break;
+                        case HotelBooking.Domain.Enums.BookingStatus.Confirmed:
+                            <span class="badge bg-success">Confirmed</span>
+                            break;
+                        case HotelBooking.Domain.Enums.BookingStatus.Cancelled:
+                            <span class="badge bg-secondary">Cancelled</span>
+                            break;
+                        case HotelBooking.Domain.Enums.BookingStatus.Completed:
+                            <span class="badge bg-primary">Completed</span>
+                            break;
+                    }
+                </td>
+                <td>
+                    @if (b.Status == HotelBooking.Domain.Enums.BookingStatus.Pending)
+                    {
+                        <form method="post" asp-action="UpdateStatus" asp-route-id="@b.Id" asp-route-status="1" class="d-inline">
+                            @Html.AntiForgeryToken()
+                            <button class="btn btn-sm btn-success">Confirm</button>
+                        </form>
+                        <form method="post" asp-action="UpdateStatus" asp-route-id="@b.Id" asp-route-status="2" class="d-inline">
+                            @Html.AntiForgeryToken()
+                            <button class="btn btn-sm btn-danger">Cancel</button>
+                        </form>
+                    }
+                    @if (b.Status == HotelBooking.Domain.Enums.BookingStatus.Confirmed)
+                    {
+                        <form method="post" asp-action="UpdateStatus" asp-route-id="@b.Id" asp-route-status="3" class="d-inline">
+                            @Html.AntiForgeryToken()
+                            <button class="btn btn-sm btn-primary">Complete</button>
+                        </form>
+                    }
+                </td>
+                <td>@b.CreatedAtUtc.ToString("dd.MM.yyyy HH:mm")</td>
+            </tr>
+        }
+    </tbody>
+</table>

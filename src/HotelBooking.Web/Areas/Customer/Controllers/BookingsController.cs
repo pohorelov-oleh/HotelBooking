@@ -25,7 +25,7 @@ public class BookingsController : Controller
     {
         if (vm.CheckOut <= vm.CheckIn)
         {
-            ModelState.AddModelError("", "Невірний діапазон дат.");
+            ModelState.AddModelError("", "Invalid date range.");
             return View(vm);
         }
 
@@ -37,14 +37,30 @@ public class BookingsController : Controller
         try
         {
             var dto = await _booking.CreateBookingAsync(userId, vm.RoomId, vm.CheckIn, vm.CheckOut, idem, ct);
-            TempData["ok"] = $"Бронювання #{dto.Id} створено.";
-            return RedirectToAction("My", "Bookings"); // make a “my bookings” page later
+            TempData["ok"] = $"Booking #{dto.Id} created.";
+            return RedirectToAction("My", "Bookings");
         }
         catch (Exception ex)
         {
             ModelState.AddModelError("", ex.Message);
             return View(vm);
         }
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Cancel(int id, CancellationToken ct)
+    {
+        if (!int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out var userId))
+            return Challenge();
+
+        var success = await _booking.CancelBookingAsync(id, userId, ct);
+        if (success)
+            TempData["ok"] = "Booking cancelled.";
+        else
+            TempData["error"] = "Cannot cancel this booking.";
+
+        return RedirectToAction(nameof(My));
     }
 
     [HttpGet]

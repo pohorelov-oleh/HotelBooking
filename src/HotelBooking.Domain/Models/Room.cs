@@ -1,4 +1,6 @@
-﻿namespace HotelBooking.Domain.Entities;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace HotelBooking.Domain.Entities;
 
 public class Room
 {
@@ -6,6 +8,8 @@ public class Room
     public int HotelId { get; set; }
     public string Name { get; set; } = default!;
     public int Capacity { get; set; }
+
+    [Column(TypeName = "decimal(10,2)")]
     public decimal PricePerNight { get; set; }
     public bool IsActive { get; set; } = true;
 

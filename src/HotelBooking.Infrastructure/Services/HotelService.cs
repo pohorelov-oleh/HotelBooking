@@ -29,7 +29,7 @@ public class HotelService : IHotelService
                     b.RoomId == r.Id &&
                     b.CheckIn < req.CheckOut &&
                     req.CheckIn < b.CheckOut))
-            .Select(r => new RoomDto(r.Id, r.HotelId, r.Name, r.Capacity, r.PricePerNight))
+            .Select(r => new RoomDto(r.Id, r.HotelId, r.Name, r.Capacity, r.PricePerNight, r.IsActive))
             .ToListAsync(ct);
 
         return rooms;

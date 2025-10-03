@@ -1,0 +1,59 @@
+﻿@using HotelBooking.Application.Dtos
+@model IReadOnlyList<RoomDto>
+
+@{
+	var hotel = ViewBag.Hotel as HotelDto;
+	ViewData["Title"] = $"Rooms - {hotel?.Name}";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if (TempData["error"] is string err)
+{
+	<div class="alert alert-danger">@err</div>
+}
+@if (TempData["ok"] is string ok)
+{
+	<div class="alert alert-success">@ok</div>
+}
+
+<h2>Rooms for @hotel?.Name</h2>
+
+<a class="btn btn-primary mb-3" asp-area="Admin" asp-controller="Rooms" asp-action="Create" asp-route-hotelId="@hotel?.Id">Create room</a>
+<a class="btn btn-secondary mb-3" asp-area="Admin" asp-controller="Hotels" asp-action="Index">Back to hotels</a>
+
+<table class="table table-striped">
+	<thead>
+		<tr><th>Name</th><th>Capacity</th><th>Price</th><th>Active</th><th></th></tr>
+	</thead>
+	<tbody>
+		@foreach (var r in Model)
+		{
+			<tr>
+				<td>@r.Name</td>
+				<td>@r.Capacity</td>
+				<td>@r.PricePerNight</td>
+				<td>
+					@if (r.IsActive)
+					{
+						<span class="badge bg-success">Active</span>
+					}
+					else
+					{
+						<span class="badge bg-secondary">Inactive</span>
+					}
+				</td>
+				<td class="text-nowrap">
+					<a class="btn btn-sm btn-outline-secondary"
+					   asp-area="Admin" asp-controller="Rooms" asp-action="Edit"
+					   asp-route-id="@r.Id" asp-route-hotelId="@r.HotelId">Edit</a>
+
+					<form method="post" asp-area="Admin" asp-controller="Rooms" asp-action="Delete"
+						  asp-route-id="@r.Id" asp-route-hotelId="@r.HotelId" class="d-inline">
+						@Html.AntiForgeryToken()
+						<button class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete room?');">Delete</button>
+					</form>
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>

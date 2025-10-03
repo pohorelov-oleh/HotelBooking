@@ -1,0 +1,44 @@
+﻿@using HotelBooking.Application.Dtos
+
+@model IReadOnlyList<HotelDto>
+@{
+	ViewData["Title"] = "Hotels";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if (TempData["error"] is string err)
+{
+	<div class="alert alert-danger">@err</div>
+}
+@if (TempData["ok"] is string ok)
+{
+	<div class="alert alert-success">@ok</div>
+}
+
+<h2 class="mb-3">Hotels</h2>
+
+<a class="btn btn-primary mb-3" asp-area="Admin" asp-controller="Hotels" asp-action="Create">Create hotel</a>
+
+<table class="table table-striped">
+	<thead>
+		<tr><th>Name</th><th>City</th><th>Address</th><th></th></tr>
+	</thead>
+	<tbody>
+		@foreach (var h in Model)
+		{
+			<tr>
+				<td>@h.Name</td>
+				<td>@h.City</td>
+				<td>@h.Address</td>
+				<td class="text-nowrap">
+					<a class="btn btn-sm btn-outline-info" asp-area="Admin" asp-controller="Hotels" asp-action="Rooms" asp-route-id="@h.Id">Rooms</a>
+					<a class="btn btn-sm btn-outline-secondary" asp-area="Admin" asp-controller="Hotels" asp-action="Edit" asp-route-id="@h.Id">Edit</a>
+					<form method="post" asp-area="Admin" asp-controller="Hotels" asp-action="Delete" asp-route-id="@h.Id" class="d-inline">
+						@Html.AntiForgeryToken()
+						<button class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete hotel and its rooms?');">Delete</button>
+					</form>
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>

@@ -1,0 +1,79 @@
+﻿@model IReadOnlyList<HotelBooking.Application.Dtos.BookingDto>
+
+@{
+    ViewData["Title"] = "My Bookings";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if (TempData["error"] is string err)
+{
+    <div class="alert alert-danger">@err</div>
+}
+@if (TempData["ok"] is string ok)
+{
+    <div class="alert alert-success">@ok</div>
+}
+
+<h2>My Bookings</h2>
+
+@if (Model == null || Model.Count == 0)
+{
+    <div class="alert alert-info">You don't have any bookings yet.</div>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Room</th>
+                <th>Check-in</th>
+                <th>Check-out</th>
+                <th>Total Price</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var b in Model)
+            {
+                <tr>
+                    <td>@b.Id</td>
+                    <td>@b.RoomId</td>
+                    <td>@b.CheckIn.ToString("dd.MM.yyyy")</td>
+                    <td>@b.CheckOut.ToString("dd.MM.yyyy")</td>
+                    <td>@b.TotalPrice.ToString("0.00")</td>
+                    <td>
+                        @switch (b.Status)
+                        {
+                            case HotelBooking.Domain.Enums.BookingStatus.Pending:
+                                <span class="badge bg-warning">Pending</span>
+                                break;
+                            case HotelBooking.Domain.Enums.BookingStatus.Confirmed:
+                                <span class="badge bg-success">Confirmed</span>
+                                break;
+                            case HotelBooking.Domain.Enums.BookingStatus.Cancelled:
+                                <span class="badge bg-secondary">Cancelled</span>
+                                break;
+                            case HotelBooking.Domain.Enums.BookingStatus.Completed:
+                                <span class="badge bg-primary">Completed</span>
+                                break;
+                        }
+                    </td>
+                    <td>
+                        @if (b.Status != HotelBooking.Domain.Enums.BookingStatus.Cancelled)
+                        {
+                            <form method="post" asp-action="Cancel" asp-route-id="@b.Id" class="d-inline">
+                                @Html.AntiForgeryToken()
+                                <button class="btn btn-sm btn-outline-danger"
+                                        onclick="return confirm('Cancel this booking?');">
+                                    Cancel
+                                </button>
+                            </form>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
