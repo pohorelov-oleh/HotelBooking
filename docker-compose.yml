@@ -1,0 +1,27 @@
+services:
+  db:
+    image: mysql:8
+    container_name: hotelbooking-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: hotelbooking
+      MYSQL_USER: hb_app
+      MYSQL_PASSWORD: StrongP@ss123
+    ports:
+      - "3306:3306"
+    networks:
+      - hotelnet
+
+  adminer:
+    image: adminer
+    container_name: hotelbooking-adminer
+    restart: always
+    ports:
+      - "8080:8080"
+    networks:
+      - hotelnet
+
+networks:
+  hotelnet:
+    driver: bridge
