@@ -1,0 +1,8 @@
+﻿@model string
+<form method="post" asp-action="Login">
+    <input name="email" type="email" placeholder="Email" required />
+    <input name="password" type="password" placeholder="Password" required />
+    <input type="hidden" name="returnUrl" value="@Model" />
+    <button type="submit">Login</button>
+</form>
+<a asp-action="Register">Реєстрація</a>

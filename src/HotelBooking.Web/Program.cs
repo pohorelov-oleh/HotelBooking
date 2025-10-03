@@ -13,10 +13,28 @@ builder.Services.AddDbContext<AppDbContext>(opt =>
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IHotelService, HotelService>();
 builder.Services.AddScoped<IBookingService, BookingService>();
+builder.Services.AddAuthentication("app-cookie")
+    .AddCookie("app-cookie", o =>
+    {
+        o.LoginPath = "/account/login";
+        o.LogoutPath = "/account/logout";
+        o.AccessDeniedPath = "/account/denied";
+        o.SlidingExpiration = true;
+        o.ExpireTimeSpan = TimeSpan.FromDays(7);
+    });
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminOnly", p => p.RequireRole("Admin"));
+});
 
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
+
+app.UseRouting();
+app.UseAuthentication();
+app.UseAuthorization();
 
 await DataSeeder.SeedAsync(app.Services);
 
@@ -36,6 +54,8 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
-app.MapRazorPages();
+app.MapControllerRoute(
+    name: "areas",
+    pattern: "{area:exists}/{controller=Dashboard}/{action=Index}/{id?}");
 
 app.Run();
