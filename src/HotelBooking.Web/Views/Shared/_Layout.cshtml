@@ -1,98 +1,151 @@
-﻿<!DOCTYPE html>
-<html lang="en">
+﻿<!doctype html>
+<html lang="en" data-theme="dark" class="scroll-smooth h-full">
 <head>
-	<meta charset="utf-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<title>@ViewData["Title"] - HotelBooking.Web</title>
-	<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-	<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-	<link rel="stylesheet" href="~/HotelBooking.Web.styles.css" asp-append-version="true" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Roomify</title>
+    <meta name="description" content=" FlyonUIPro is the best FlyonUI dashboard for responsive web apps. Streamline your app development process with ease." />
+    <link rel="icon" type="image/x-icon" href="~/client/img/favicon/favicon.ico" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&ampdisplay=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="~/client/dist/libs/flatpickr/dist/flatpickr.css" />
+    <link rel="stylesheet" href="~/client/dist/css/output.css" />
+
+    <script type="text/javascript">
+        (function () {
+          try {
+            const root = document.documentElement;
+            const layoutPath = root.getAttribute('data-layout-path')?.replace('/', '') || 'free-landing-page';
+            const localStorageKey = `${layoutPath}-theme`;
+
+            window.THEME_CONFIG = {
+              'free-landing-page': {
+                default: 'dark',
+                light: 'light',
+                dark: 'dark',
+                system: { light: 'light', dark: 'dark' }
+              }
+            };
+
+            const getSystemPreference = () => window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+            const resolveTheme = (selectedTheme, layoutPath) => {
+              const cfg = window.THEME_CONFIG[layoutPath];
+              if (!cfg)
+                return selectedTheme === 'system' ? (getSystemPreference() ? 'dark' : 'light') : (selectedTheme || 'dark');
+
+              if (selectedTheme === 'system')
+                return getSystemPreference() ? cfg.system.dark : cfg.system.light;
+
+              return cfg[selectedTheme] || selectedTheme || cfg.default || 'dark';
+            };
+
+            const savedTheme = localStorage.getItem(localStorageKey) || 'dark';
+            const resolvedTheme = resolveTheme(savedTheme, layoutPath);
+
+            root.setAttribute('data-theme', resolvedTheme);
+          } catch (e) {
+            console.warn('Early theme script error:', e);
+          }
+        })();
+    </script>
 </head>
-<body>
-	<header>
-		<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-			<div class="container-fluid">
-				<a class="navbar-brand" asp-area="" asp-controller="Hotels" asp-action="Index">HotelBooking</a>
-				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-						aria-expanded="false" aria-label="Toggle navigation">
-					<span class="navbar-toggler-icon"></span>
-				</button>
-				<div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-					<ul class="navbar-nav me-auto mb-2 mb-lg-0">
-						<li class="nav-item">
-							<a class="nav-link text-dark" asp-area="" asp-controller="Hotels" asp-action="Index">Hotels</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link text-dark" asp-area="" asp-controller="Hotels" asp-action="Search">Search</a>
-						</li>
+<body class="h-full flex flex-col">
+    <style>
+        .wrapper{
+            min-height: 100vh;
+        }
+      
+    </style>
+    <div class="min-h-screen flex flex-col bg-base-100 wrapper">
+        <header class="border-base-content/20 bg-base-100 py-0.25 sticky top-0 z-10 w-full border-b">
+            <nav class="navbar mx-auto max-w-[1280px] rounded-b-xl px-4 sm:px-6 lg:px-8">
+                <div class="w-full lg:flex lg:items-center lg:gap-2">
+                    <div class="navbar-start items-center justify-between max-lg:w-full">
+                        <a class="text-base-content flex items-center gap-3 text-xl font-semibold" asp-area="" asp-controller="Home" asp-action="Index">
+                            <img src="~/images/logo.png" alt="HotelBooking" class="h-8 w-auto" />
+                        </a>
+                        <div class="flex items-center gap-5 lg:hidden">
+                            @if (User.Identity?.IsAuthenticated == true)
+                            {
+                                <a asp-area="Customer" asp-controller="Bookings" asp-action="My" class="btn btn-primary btn-sm">My bookings</a>
+                            }
+                            else
+                            {
+                                <a asp-area="" asp-controller="Account" asp-action="Login" class="btn btn-outline btn-sm">Login</a>
+                            }
 
-						@if (User.Identity?.IsAuthenticated == true)
-						{
-							<li class="nav-item">
-								<a class="nav-link text-dark" asp-area="Customer" asp-controller="Bookings" asp-action="My">My bookings</a>
-							</li>
-						}
+                            <button type="button" class="collapse-toggle btn btn-outline btn-secondary btn-square"
+                                    data-collapse="#navbar-block-4" aria-controls="navbar-block-4" aria-label="Toggle navigation">
+                                <span class="icon-[tabler--menu-2] collapse-open:hidden size-5.5"></span>
+                                <span class="icon-[tabler--x] collapse-open:block size-5.5 hidden"></span>
+                            </button>
+                        </div>
+                    </div>
 
-						@if (User.IsInRole("Admin"))
-						{
-							<li class="nav-item dropdown">
-								<a class="nav-link dropdown-toggle text-dark" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-									Admin
-								</a>
-								<ul class="dropdown-menu" aria-labelledby="adminDropdown">
-									<li>
-										<a class="dropdown-item" asp-area="Admin" asp-controller="Hotels" asp-action="Index">Hotels</a>
-									</li>
-									<li>
-										<a class="dropdown-item" asp-area="Admin" asp-controller="Hotels" asp-action="Create">Create hotel</a>
-									</li>
-									<hr />
-									<li>
-										<a class="dropdown-item" asp-area="Admin" asp-controller="Bookings" asp-action="Index">Bookings</a>
-									</li>
-								</ul>
-							</li>
-						}
-					</ul>
+                    <div id="navbar-block-4" class="lg:navbar-center transition-height collapse hidden grow overflow-hidden font-medium duration-300 lg:flex">
+                        <div class="text-base-content flex gap-6 text-base max-lg:mt-4 max-lg:flex-col lg:items-center">
+                            <a asp-area="" asp-controller="Hotels" asp-action="Index" class="hover:text-primary nav-link">Hotels</a>
+                            <a asp-area="" asp-controller="Hotels" asp-action="Search" class="hover:text-primary nav-link">Search</a>
 
-					<ul class="navbar-nav ms-auto">
-						@if (User.Identity?.IsAuthenticated == true)
-						{
-							<li class="nav-item me-2 align-self-center">
-								<span class="text-muted">Hello, @User.Identity!.Name</span>
-							</li>
-							<li class="nav-item">
-								<a class="btn btn-outline-secondary" asp-area="" asp-controller="Account" asp-action="Logout">Logout</a>
-							</li>
-						}
-						else
-						{
-							<li class="nav-item me-2">
-								<a class="btn btn-outline-primary" asp-area="" asp-controller="Account" asp-action="Login">Login</a>
-							</li>
-							<li class="nav-item">
-								<a class="btn btn-primary" asp-area="" asp-controller="Account" asp-action="Register">Register</a>
-							</li>
-						}
-					</ul>
-				</div>
-			</div>
-		</nav>
-	</header>
-	<div class="container">
-		<main role="main" class="pb-3">
-			@RenderBody()
-		</main>
-	</div>
+                            @if (User.Identity?.IsAuthenticated == true)
+                            {
+                                <a asp-area="Customer" asp-controller="Bookings" asp-action="My" class="hover:text-primary nav-link">My bookings</a>
+                            }
 
-	<footer class="border-top footer text-muted">
-		<div class="container">
-			&copy; 2025 - HotelBooking.Web
-		</div>
-	</footer>
-	<script src="~/lib/jquery/dist/jquery.min.js"></script>
-	<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-	<script src="~/js/site.js" asp-append-version="true"></script>
-	@await RenderSectionAsync("Scripts", required: false)
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index" class="hover:text-primary nav-link">Admin Dashboard</a>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="navbar-end max-lg:hidden flex gap-2">
+                        @if (User.Identity?.IsAuthenticated == true)
+                        {
+                            <span class="text-sm text-muted">Hello, @User.Identity!.Name</span>
+                            <a asp-area="" asp-controller="Account" asp-action="Logout" class="btn btn-outline btn-secondary">Logout</a>
+                        }
+                        else
+                        {
+                            <a asp-area="" asp-controller="Account" asp-action="Login" class="btn btn-outline btn-primary">Login</a>
+                            <a asp-area="" asp-controller="Account" asp-action="Register" class="btn btn-primary">Register</a>
+                        }
+                    </div>
+                </div>
+            </nav>
+        </header>
+        <main class="flex-1">
+            @RenderBody()
+        </main>
+
+        <footer>
+            <div class="divider"></div>
+            <div class="mx-auto max-w-[1280px] px-4 py-8 sm:px-6 lg:px-8">
+                <div class="text-base-content text-center text-base">
+                    &copy;2025
+                    <a href="#" class="text-primary">Roomify</a>
+                    ,
+                    <br class="md:hidden" />
+                    Made with ❤️ for travelers worldwide.
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="~/client/dist/libs/tailwindcss-intersect/dist/observer.min.js"></script>
+    <script src="~/client/dist/libs/flatpickr/dist/flatpickr.js"></script>
+    <script src="~/client/dist/libs/flyonui/flyonui.js"></script>
+    <script src="~/client/dist/js/theme-utils.js"></script>
+    <script src="~/client/dist/js/main.js"></script>
+    <script src="~/client/dist/js/landing-page-free.js"></script>
+
+    <button id="scrollToTopBtn"
+            class="btn btn-circle btn-soft btn-secondary/20 bottom-15 end-15 motion-preset-slide-right motion-duration-800 motion-delay-100 fixed z-[3] hidden"
+            aria-label="Circle Soft Icon Button">
+        <span class="icon-[tabler--chevron-up] size-5 shrink-0"></span>
+    </button>
 </body>
 </html>

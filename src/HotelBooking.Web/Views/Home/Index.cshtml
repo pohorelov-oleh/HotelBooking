@@ -2,7 +2,55 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<main>
+    <section id="home">
+        <div class="gap-18 md:pt-45 lg:gap-35 lg:pt-47.5 flex h-full flex-col justify-between bg-[url('../../img/free-layer-blur.png')] bg-cover bg-center bg-no-repeat py-8 pt-40 sm:py-16 md:gap-24 lg:py-24">
+            <div class="mx-auto flex max-w-[1280px] flex-col items-center gap-6 justify-self-center px-4 text-center sm:px-6 lg:px-8">
+                <h1 class="text-base-content z-1 relative text-5xl font-bold leading-[1.15] max-md:text-2xl md:max-w-3xl">
+                    <span>
+                        Less Planning.
+                        <br />
+                        More Traveling.
+                    </span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="348" height="10" viewBox="0 0 348 10" fill="none" class="-z-1 left-25 absolute -bottom-1.5 max-lg:left-4 max-md:hidden">
+                        <path d="M1.85645 8.23715C62.4821 3.49284 119.04 1.88864 180.031 1.88864C225.103 1.88864 275.146 1.32978 319.673 4.85546C328.6 5.24983 336.734 6.33887 346.695 7.60269" stroke="url(#paint0_linear_17052_181397)" stroke-width="2" stroke-linecap="round" />
+                        <defs>
+                            <linearGradient id="paint0_linear_17052_181397" x1="29.7873" y1="1.85626" x2="45.2975" y2="69.7387" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="var(--color-primary)" />
+                                <stop offset="1" stop-color="var(--color-primary-content)" />
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </h1>
+                <p class="text-base-content/80 max-w-3xl">One search, many options. Book in two clicks and get back to what matters.</p>
+                <a asp-area="" asp-controller="Hotels" asp-action="Index" class="btn btn-primary btn-gradient btn-lg">
+                    Discover Rooms
+                    <span class="icon-[tabler--arrow-right] size-5 rtl:rotate-180"></span>
+                </a>
+            </div>
+        </div>
+    </section>
+    <div class="bg-base-100 py-8 sm:py-16 lg:py-24">
+        <div class="mx-auto max-w-[1280px] px-4 sm:px-6 lg:px-8">
+            <div class="from-primary/30 to-error/30 p-0.25 overflow-hidden rounded-3xl bg-gradient-to-r">
+                <div class="bg-base-100 rounded-3xl p-0.5">
+                    <div class="from-primary/6 to-error/6 relative rounded-3xl bg-gradient-to-r to-50% p-8 lg:p-16">
+                        <div class="flex justify-between gap-8 max-md:flex-col max-sm:items-center max-sm:text-center md:items-center">
+                            <div class="max-w-xs space-y-4 lg:max-w-lg">
+                                <h2 class="text-base-content text-xl font-bold md:text-3xl">Book Smarter, Travel Better</h2>
+                                <p class="text-base-content/80">
+                                    Discover verified rooms at the best rates. Find your perfect stay with instant confirmation and no hidden fees.
+                                    Plan ahead or book last-minute, the choice is yours.
+                                </p>
+                                <a class="btn btn-gradient btn-primary" asp-area="" asp-controller="Hotels" asp-action="Index">
+                                    Find My Stay
+                                    <span class="icon-[tabler--arrow-right]"></span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
