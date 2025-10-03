@@ -1,0 +1,15 @@
+﻿@model HotelBooking.Web.Models.HotelListVm
+<h2>Hotels</h2>
+<ul>
+	@foreach (var h in Model.Hotels)
+	{
+		<li>
+			<strong>@h.Name</strong> — @h.City, @h.Address
+			@if (!string.IsNullOrEmpty(h.Description))
+			{
+				<div>@h.Description</div>
+			}
+		</li>
+	}
+</ul>
+<a asp-controller="Hotels" asp-action="Search">Search rooms</a>

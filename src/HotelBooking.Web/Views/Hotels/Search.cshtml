@@ -1,0 +1,52 @@
+﻿@model HotelBooking.Web.Models.SearchRoomsVm
+
+<h2>Search for Rooms</h2>
+<form method="post">
+    <input name="City" value="@Model.City" placeholder="City" required />
+    <input type="date" name="CheckIn" value="@(Model.CheckIn?.ToString("yyyy-MM-dd"))" required />
+    <input type="date" name="CheckOut" value="@(Model.CheckOut?.ToString("yyyy-MM-dd"))" required />
+    <input type="number" name="Capacity" value="@Model.Capacity" min="1" required placeholder="Number of Guests" />
+    <button type="submit">Search</button>
+</form>
+
+@if (Model.Results?.Count > 0)
+{
+    <h3>Available Rooms</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Capacity</th>
+                <th>Price per Night</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var r in Model.Results)
+            {
+                <tr>
+                    <td>@r.Name</td>
+                    <td>@r.Capacity</td>
+                    <td>@r.PricePerNight</td>
+                    <td>
+                        @if (User.Identity?.IsAuthenticated == true)
+                        {
+                            <a asp-area="Customer" asp-controller="Bookings" asp-action="Create"
+                               asp-route-roomId="@r.Id"
+                               asp-route-checkIn="@(Model.CheckIn?.ToString())"
+                               asp-route-checkOut="@(Model.CheckOut?.ToString())">
+                                Book Now
+                            </a>
+                        }
+                        else
+                        {
+                            <a asp-controller="Account" asp-action="Login" asp-route-returnUrl="@Url.Action("Search", "Hotels")">
+                                Log in to Book
+                            </a>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

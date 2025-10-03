@@ -18,10 +18,5 @@
 		</PackageReference>
 		<PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.6.2" />
 	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="Areas\Customer\Controllers\" />
-	  <Folder Include="Areas\Customer\Views\" />
-	</ItemGroup>
 	
 </Project>

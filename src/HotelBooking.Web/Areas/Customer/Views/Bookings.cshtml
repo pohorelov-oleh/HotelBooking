@@ -1,0 +1,14 @@
+﻿@model HotelBooking.Web.Models.CreateBookingVm
+
+<h2>Booking</h2>
+<form method="post">
+    <input type="hidden" name="RoomId" value="@Model.RoomId" />
+
+    <label>Check-in</label>
+    <input type="date" name="CheckIn" value="@Model.CheckIn.ToString("yyyy-MM-dd")" />
+
+    <label>Check-out</label>
+    <input type="date" name="CheckOut" value="@Model.CheckOut.ToString("yyyy-MM-dd")" />
+
+    <button type="submit">Confirm</button>
+</form>
