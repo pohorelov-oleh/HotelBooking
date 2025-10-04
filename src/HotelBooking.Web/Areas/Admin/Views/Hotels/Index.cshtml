@@ -1,44 +1,100 @@
 ﻿@using HotelBooking.Application.Dtos
-
 @model IReadOnlyList<HotelDto>
+
 @{
-	ViewData["Title"] = "Hotels";
-	Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Hotels";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
 
 @if (TempData["error"] is string err)
 {
-	<div class="alert alert-danger">@err</div>
+    <div class="mb-4 rounded-md border border-red-200 bg-red-50 px-4 py-3 text-red-700">@err</div>
 }
 @if (TempData["ok"] is string ok)
 {
-	<div class="alert alert-success">@ok</div>
+    <div class="mb-4 rounded-md border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-700">@ok</div>
 }
 
-<h2 class="mb-3">Hotels</h2>
+<div class="mb-6 flex items-center justify-between">
+    <h1 class="text-3xl font-semibold text-dark">Hotels</h1>
 
-<a class="btn btn-primary mb-3" asp-area="Admin" asp-controller="Hotels" asp-action="Create">Create hotel</a>
+    <a asp-area="Admin" asp-controller="Hotels" asp-action="Create"
+       class="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-white shadow hover:bg-blue-700">
+        <i class="ti ti-plus text-lg"></i>
+        <span>Create hotel</span>
+    </a>
+</div>
 
-<table class="table table-striped">
-	<thead>
-		<tr><th>Name</th><th>City</th><th>Address</th><th></th></tr>
-	</thead>
-	<tbody>
-		@foreach (var h in Model)
-		{
-			<tr>
-				<td>@h.Name</td>
-				<td>@h.City</td>
-				<td>@h.Address</td>
-				<td class="text-nowrap">
-					<a class="btn btn-sm btn-outline-info" asp-area="Admin" asp-controller="Hotels" asp-action="Rooms" asp-route-id="@h.Id">Rooms</a>
-					<a class="btn btn-sm btn-outline-secondary" asp-area="Admin" asp-controller="Hotels" asp-action="Edit" asp-route-id="@h.Id">Edit</a>
-					<form method="post" asp-area="Admin" asp-controller="Hotels" asp-action="Delete" asp-route-id="@h.Id" class="d-inline">
-						@Html.AntiForgeryToken()
-						<button class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete hotel and its rooms?');">Delete</button>
-					</form>
-				</td>
-			</tr>
-		}
-	</tbody>
-</table>
+@if (Model is null || Model.Count == 0)
+{
+    <div class="rounded-xl border border-gray-200 bg-white p-8 text-center text-gray-600">
+        No hotels yet.
+    </div>
+}
+else
+{
+    <div class="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden">
+        <div class="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full border border-gray-200 border-collapse rounded-lg">
+                    <thead class="bg-gray-100 border-b border-gray-300">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 border border-gray-200">
+                                Name
+                            </th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 border border-gray-200">
+                                City
+                            </th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 border border-gray-200">
+                                Address
+                            </th>
+                            <th class="px-6 py-3 text-right text-xs font-semibold uppercase tracking-wider text-gray-600 border border-gray-200">
+                                Actions
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white text-sm">
+                        @foreach (var h in Model)
+                        {
+                            <tr class="hover:bg-gray-50 transition">
+                                <td class="px-6 py-4 font-medium text-dark border border-gray-200 whitespace-nowrap">
+                                    @h.Name
+                                </td>
+                                <td class="px-6 py-4 border border-gray-200 whitespace-nowrap">
+                                    @h.City
+                                </td>
+                                <td class="px-6 py-4 border border-gray-200">
+                                    <div class="max-w-[260px] truncate">@h.Address</div>
+                                </td>
+                                <td class="px-6 py-4 border border-gray-200 whitespace-nowrap">
+                                    <div class="flex justify-end gap-2">
+                                        <a asp-area="Admin" asp-controller="Hotels" asp-action="Rooms" asp-route-id="@h.Id"
+                                           class="inline-flex items-center gap-1.5 rounded-md border border-indigo-200 px-3 py-1.5 text-indigo-700 hover:bg-indigo-50">
+                                            <i class="ti ti-door-enter text-base"></i>
+                                            <span>Rooms</span>
+                                        </a>
+                                        <a asp-area="Admin" asp-controller="Hotels" asp-action="Edit" asp-route-id="@h.Id"
+                                           class="inline-flex items-center gap-1.5 rounded-md border border-gray-200 px-3 py-1.5 text-gray-700 hover:bg-gray-50">
+                                            <i class="ti ti-edit text-base"></i>
+                                            <span>Edit</span>
+                                        </a>
+                                        <form method="post"
+                                              asp-area="Admin" asp-controller="Hotels" asp-action="Delete" asp-route-id="@h.Id"
+                                              onsubmit="return confirm('Delete hotel and its rooms?');">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit"
+                                                    class="inline-flex items-center gap-1.5 rounded-md border border-red-200 px-3 py-1.5 text-red-600 hover:bg-red-50">
+                                                <i class="ti ti-trash text-base"></i>
+                                                <span>Delete</span>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+}

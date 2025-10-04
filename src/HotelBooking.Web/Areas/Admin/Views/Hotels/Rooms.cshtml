@@ -2,58 +2,114 @@
 @model IReadOnlyList<RoomDto>
 
 @{
-	var hotel = ViewBag.Hotel as HotelDto;
-	ViewData["Title"] = $"Rooms - {hotel?.Name}";
-	Layout = "~/Views/Shared/_Layout.cshtml";
+    var hotel = ViewBag.Hotel as HotelDto;
+    ViewData["Title"] = $"Rooms - {hotel?.Name}";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
 
 @if (TempData["error"] is string err)
 {
-	<div class="alert alert-danger">@err</div>
+    <div class="mb-4 rounded-md border border-red-200 bg-red-50 px-4 py-3 text-red-700">@err</div>
 }
 @if (TempData["ok"] is string ok)
 {
-	<div class="alert alert-success">@ok</div>
+    <div class="mb-4 rounded-md border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-700">@ok</div>
 }
 
-<h2>Rooms for @hotel?.Name</h2>
+<div class="mb-6 flex items-center justify-between">
+    <h1 class="text-3xl font-semibold text-dark">Rooms for @hotel?.Name</h1>
 
-<a class="btn btn-primary mb-3" asp-area="Admin" asp-controller="Rooms" asp-action="Create" asp-route-hotelId="@hotel?.Id">Create room</a>
-<a class="btn btn-secondary mb-3" asp-area="Admin" asp-controller="Hotels" asp-action="Index">Back to hotels</a>
+    <div class="flex items-center gap-3">
+        <a asp-area="Admin" asp-controller="Rooms" asp-action="Create" asp-route-hotelId="@hotel?.Id"
+           class="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-white shadow hover:bg-blue-700">
+            <i class="ti ti-plus text-lg"></i>
+            <span>Create room</span>
+        </a>
+        <a asp-area="Admin" asp-controller="Hotels" asp-action="Index"
+           class="inline-flex items-center gap-2 rounded-lg border border-gray-200 px-4 py-2.5 text-gray-700 hover:bg-gray-50">
+            <i class="ti ti-arrow-left text-lg"></i>
+            <span>Back to hotels</span>
+        </a>
+    </div>
+</div>
 
-<table class="table table-striped">
-	<thead>
-		<tr><th>Name</th><th>Capacity</th><th>Price</th><th>Active</th><th></th></tr>
-	</thead>
-	<tbody>
-		@foreach (var r in Model)
-		{
-			<tr>
-				<td>@r.Name</td>
-				<td>@r.Capacity</td>
-				<td>@r.PricePerNight</td>
-				<td>
-					@if (r.IsActive)
-					{
-						<span class="badge bg-success">Active</span>
-					}
-					else
-					{
-						<span class="badge bg-secondary">Inactive</span>
-					}
-				</td>
-				<td class="text-nowrap">
-					<a class="btn btn-sm btn-outline-secondary"
-					   asp-area="Admin" asp-controller="Rooms" asp-action="Edit"
-					   asp-route-id="@r.Id" asp-route-hotelId="@r.HotelId">Edit</a>
+@if (Model is null || Model.Count == 0)
+{
+    <div class="rounded-xl border border-gray-200 bg-white p-8 text-center text-gray-600">
+        No rooms yet.
+    </div>
+}
+else
+{
+    <div class="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full border border-gray-200 border-collapse">
+                <thead class="bg-gray-100 border-b border-gray-300">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 border border-gray-200">
+                            Name
+                        </th>
+                        <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 border border-gray-200">
+                            Capacity
+                        </th>
+                        <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 border border-gray-200">
+                            Price per night
+                        </th>
+                        <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 border border-gray-200">
+                            Status
+                        </th>
+                        <th class="px-6 py-3 text-right text-xs font-semibold uppercase tracking-wider text-gray-600 border border-gray-200">
+                            Actions
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white text-sm">
+                    @foreach (var r in Model)
+                    {
+                        <tr class="hover:bg-gray-50 transition">
+                            <td class="px-6 py-4 border border-gray-200 font-medium text-dark">@r.Name</td>
+                            <td class="px-6 py-4 border border-gray-200">@r.Capacity</td>
+                            <td class="px-6 py-4 border border-gray-200">@r.PricePerNight</td>
+                            <td class="px-6 py-4 border border-gray-200">
+                                @if (r.IsActive)
+                                {
+                                    <span class="inline-flex items-center rounded-md border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-xs font-medium text-emerald-700">
+                                        Active
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="inline-flex items-center rounded-md border border-gray-200 bg-gray-50 px-2.5 py-1 text-xs font-medium text-gray-600">
+                                        Inactive
+                                    </span>
+                                }
+                            </td>
+                            <td class="px-6 py-4 border border-gray-200 whitespace-nowrap">
+                                <div class="flex justify-end gap-2">
+                                    <a asp-area="Admin" asp-controller="Rooms" asp-action="Edit"
+                                       asp-route-id="@r.Id" asp-route-hotelId="@r.HotelId"
+                                       class="inline-flex items-center gap-1.5 rounded-md border border-gray-200 px-3 py-1.5 text-gray-700 hover:bg-gray-50">
+                                        <i class="ti ti-edit text-base"></i>
+                                        <span>Edit</span>
+                                    </a>
 
-					<form method="post" asp-area="Admin" asp-controller="Rooms" asp-action="Delete"
-						  asp-route-id="@r.Id" asp-route-hotelId="@r.HotelId" class="d-inline">
-						@Html.AntiForgeryToken()
-						<button class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete room?');">Delete</button>
-					</form>
-				</td>
-			</tr>
-		}
-	</tbody>
-</table>
+                                    <form method="post"
+                                          asp-area="Admin" asp-controller="Rooms" asp-action="Delete"
+                                          asp-route-id="@r.Id" asp-route-hotelId="@r.HotelId"
+                                          onsubmit="return confirm('Delete room?');">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit"
+                                                class="inline-flex items-center gap-1.5 rounded-md border border-red-200 px-3 py-1.5 text-red-600 hover:bg-red-50">
+                                            <i class="ti ti-trash text-base"></i>
+                                            <span>Delete</span>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}

@@ -1,84 +1,123 @@
 ﻿@model dynamic
-
 @{
     ViewData["Title"] = "All Bookings";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
 
-@if (TempData["error"] is string err)
-{
-    <div class="alert alert-danger">@err</div>
-}
-@if (TempData["ok"] is string ok)
-{
-    <div class="alert alert-success">@ok</div>
-}
+<main class="h-full overflow-y-auto max-w-full pt-4">
+    <div class="container full-container py-5">
+        <div class="card">
+            <div class="card-body p-0">
+                <div class="overflow-x-auto">
+                    <table class="w-full border border-gray-200 border-collapse rounded-lg">
+                        <thead class="bg-gray-100 border-b border-gray-300">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 border border-gray-200">#</th>
+                                <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 border border-gray-200">User</th>
+                                <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 border border-gray-200">Hotel</th>
+                                <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 border border-gray-200">Room</th>
+                                <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 border border-gray-200">Check-in</th>
+                                <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 border border-gray-200">Check-out</th>
+                                <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 border border-gray-200">Total</th>
+                                <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 border border-gray-200">Status</th>
+                                <th class="px-6 py-3 text-right text-xs font-semibold uppercase tracking-wider text-gray-600 border border-gray-200">Actions</th>
+                                <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 border border-gray-200">Created</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white text-sm">
+                            @foreach (var b in Model)
+                            {
+                                <tr class="hover:bg-gray-50 transition">
+                                    <td class="px-6 py-4 border border-gray-200 whitespace-nowrap">@b.Id</td>
 
-<h2>All Bookings</h2>
+                                    <!-- User -->
+                                    <td class="px-6 py-4 border border-gray-200">
+                                        <div class="flex flex-col">
+                                            <span class="font-medium text-dark">@((string)b.UserName ?? "(no name)")</span>
+                                            <span class="text-xs text-gray-500">@((string)b.UserEmail ?? "—")</span>
+                                            <span class="text-[11px] text-gray-400">ID: @b.UserId</span>
+                                        </div>
+                                    </td>
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>#</th>
-            <th>User ID</th>
-            <th>Room ID</th>
-            <th>Check-in</th>
-            <th>Check-out</th>
-            <th>Total Price</th>
-            <th>Status</th>
-            <th>Actions</th>
-            <th>Created</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var b in Model)
-        {
-            <tr>
-                <td>@b.Id</td>
-                <td>@b.UserId</td>
-                <td>@b.RoomId</td>
-                <td>@b.CheckIn.ToString("dd.MM.yyyy")</td>
-                <td>@b.CheckOut.ToString("dd.MM.yyyy")</td>
-                <td>@b.TotalPrice.ToString("0.00")</td>
-                <td>
-                    @switch (b.Status)
-                    {
-                        case HotelBooking.Domain.Enums.BookingStatus.Pending:
-                            <span class="badge bg-warning">Pending</span>
-                            break;
-                        case HotelBooking.Domain.Enums.BookingStatus.Confirmed:
-                            <span class="badge bg-success">Confirmed</span>
-                            break;
-                        case HotelBooking.Domain.Enums.BookingStatus.Cancelled:
-                            <span class="badge bg-secondary">Cancelled</span>
-                            break;
-                        case HotelBooking.Domain.Enums.BookingStatus.Completed:
-                            <span class="badge bg-primary">Completed</span>
-                            break;
-                    }
-                </td>
-                <td>
-                    @if (b.Status == HotelBooking.Domain.Enums.BookingStatus.Pending)
-                    {
-                        <form method="post" asp-action="UpdateStatus" asp-route-id="@b.Id" asp-route-status="1" class="d-inline">
-                            @Html.AntiForgeryToken()
-                            <button class="btn btn-sm btn-success">Confirm</button>
-                        </form>
-                        <form method="post" asp-action="UpdateStatus" asp-route-id="@b.Id" asp-route-status="2" class="d-inline">
-                            @Html.AntiForgeryToken()
-                            <button class="btn btn-sm btn-danger">Cancel</button>
-                        </form>
-                    }
-                    @if (b.Status == HotelBooking.Domain.Enums.BookingStatus.Confirmed)
-                    {
-                        <form method="post" asp-action="UpdateStatus" asp-route-id="@b.Id" asp-route-status="3" class="d-inline">
-                            @Html.AntiForgeryToken()
-                            <button class="btn btn-sm btn-primary">Complete</button>
-                        </form>
-                    }
-                </td>
-                <td>@b.CreatedAtUtc.ToString("dd.MM.yyyy HH:mm")</td>
-            </tr>
-        }
-    </tbody>
-</table>
+                                    <!-- Hotel -->
+                                    <td class="px-6 py-4 border border-gray-200">
+                                        <div class="flex flex-col">
+                                            <span class="font-medium text-dark">@((string)b.HotelName ?? "—")</span>
+                                            <span class="text-[11px] text-gray-400">ID: @b.HotelId</span>
+                                        </div>
+                                    </td>
+
+                                    <!-- Room -->
+                                    <td class="px-6 py-4 border border-gray-200">
+                                        <div class="flex flex-col">
+                                            <span class="font-medium text-dark">@((string)b.RoomName ?? "—")</span>
+                                            <span class="text-[11px] text-gray-400">ID: @b.RoomId</span>
+                                        </div>
+                                    </td>
+
+                                    <td class="px-6 py-4 border border-gray-200 whitespace-nowrap">@b.CheckIn.ToString("dd.MM.yyyy")</td>
+                                    <td class="px-6 py-4 border border-gray-200 whitespace-nowrap">@b.CheckOut.ToString("dd.MM.yyyy")</td>
+                                    <td class="px-6 py-4 border border-gray-200 whitespace-nowrap">@b.TotalPrice.ToString("0.00")</td>
+
+                                    <!-- Status badge (як раніше) -->
+                                    <td class="px-6 py-4 border border-gray-200 whitespace-nowrap">
+                                        @{
+                                            var s = (int)b.Status;
+                                            string cls = s switch
+                                            {
+                                                0 => "bg-yellow-100 text-yellow-800",
+                                                1 => "bg-emerald-100 text-emerald-700",
+                                                2 => "bg-gray-200 text-gray-700",
+                                                3 => "bg-blue-100 text-blue-700",
+                                                _ => "bg-gray-100 text-gray-700"
+                                            };
+                                            string text = s switch { 0 => "Pending", 1 => "Confirmed", 2 => "Cancelled", 3 => "Completed", _ => "Unknown" };
+                                        }
+                                        <span class="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium @cls">@text</span>
+                                    </td>
+
+                                    <!-- Actions (як у тебе) -->
+                                    <td class="px-6 py-4 border border-gray-200 whitespace-nowrap">
+                                        <div class="flex justify-end gap-2">
+                                            @if ((int)b.Status == 0)
+                                            {
+                                                <form method="post" asp-area="Admin" asp-controller="Bookings" asp-action="UpdateStatus"
+                                                      asp-route-id="@b.Id" asp-route-status="1" class="inline">
+                                                    @Html.AntiForgeryToken()
+                                                    <button class="inline-flex items-center gap-1.5 rounded-md border border-emerald-200 px-3 py-1.5 text-emerald-700 hover:bg-emerald-50">
+                                                        <i class="ti ti-check text-base"></i><span>Confirm</span>
+                                                    </button>
+                                                </form>
+                                                <form method="post" asp-area="Admin" asp-controller="Bookings" asp-action="UpdateStatus"
+                                                      asp-route-id="@b.Id" asp-route-status="2" class="inline">
+                                                    @Html.AntiForgeryToken()
+                                                    <button class="inline-flex items-center gap-1.5 rounded-md border border-red-200 px-3 py-1.5 text-red-600 hover:bg-red-50">
+                                                        <i class="ti ti-x text-base"></i><span>Cancel</span>
+                                                    </button>
+                                                </form>
+                                            }
+                                            @if ((int)b.Status == 1)
+                                            {
+                                                <form method="post" asp-area="Admin" asp-controller="Bookings" asp-action="UpdateStatus"
+                                                      asp-route-id="@b.Id" asp-route-status="3" class="inline">
+                                                    @Html.AntiForgeryToken()
+                                                    <button class="inline-flex items-center gap-1.5 rounded-md border border-blue-200 px-3 py-1.5 text-blue-700 hover:bg-blue-50">
+                                                        <i class="ti ti-circle-check text-base"></i><span>Complete</span>
+                                                    </button>
+                                                </form>
+                                            }
+                                        </div>
+                                    </td>
+
+                                    <td class="px-6 py-4 border border-gray-200 whitespace-nowrap">
+                                        @b.CreatedAtUtc.ToString("dd.MM.yyyy HH:mm")
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>

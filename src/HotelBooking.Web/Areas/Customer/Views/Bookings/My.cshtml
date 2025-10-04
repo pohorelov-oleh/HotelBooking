@@ -80,7 +80,7 @@
                                     }
                                 </td>
                                 <td class="text-right">
-                                    @if (b.Status != HotelBooking.Domain.Enums.BookingStatus.Cancelled)
+                                    @if (b.Status == HotelBooking.Domain.Enums.BookingStatus.Pending)
                                     {
                                         <form method="post" asp-action="Cancel" asp-route-id="@b.Id" class="inline">
                                             @Html.AntiForgeryToken()

@@ -22,21 +22,38 @@ public class BookingsController : Controller
 
     public async Task<IActionResult> Index(CancellationToken ct)
     {
-        var bookings = await _db.Bookings
-            .AsNoTracking()
-            .OrderByDescending(b => b.CreatedAtUtc)
-            .Select(b => new
+        var bookings = await (
+            from b in _db.Bookings.AsNoTracking()
+            join u in _db.Users.AsNoTracking() on b.UserId equals u.Id into uj
+            from u in uj.DefaultIfEmpty()
+
+            join r in _db.Rooms.AsNoTracking() on b.RoomId equals r.Id into rj
+            from r in rj.DefaultIfEmpty()
+
+            join h in _db.Hotels.AsNoTracking() on r.HotelId equals h.Id into hj
+            from h in hj.DefaultIfEmpty()
+
+            orderby b.CreatedAtUtc descending
+            select new
             {
                 b.Id,
                 b.UserId,
+                UserName = u != null ? (u.FullName ?? u.Email) : null,
+                UserEmail = u != null ? u.Email : null,
+
                 b.RoomId,
+                RoomName = r != null ? r.Name : null,
+
+                HotelId = r != null ? (int?)r.HotelId : null,
+                HotelName = h != null ? h.Name : null,
+
                 b.CheckIn,
                 b.CheckOut,
                 b.TotalPrice,
                 b.Status,
                 b.CreatedAtUtc
-            })
-            .ToListAsync(ct);
+            }
+        ).ToListAsync(ct);
 
         return View(bookings);
     }

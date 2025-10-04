@@ -1,0 +1,120 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" type="image/png" href="~/favicon.ico" />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+    <link rel="stylesheet" href="~/admin/css/theme.css" />
+    <title>Roomify Admin</title>
+</head>
+<body class="bg-info/5">
+    <main>
+        <div id="main-wrapper" class="flex ">
+            <aside class="fixed top-0 left-0 h-screen flex flex-col border-r border-gray-200 bg-white w-[270px]">
+                <div class="p-5">
+                    <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index" class="text-nowrap">
+                        <img src="~/admin/images/logos/roomify-transparent.png" />
+                    </a>    
+                </div>
+                <div class="scroll-sidebar" data-simplebar>
+                    <div class="px-6 mt-8">
+                        <nav class="w-full flex flex-col sidebar-nav">
+                            <ul id="sidebarnav" class="text-dark text-sm">
+
+                                <li class="text-xs font-bold pb-4 uppercase tracking-wide text-base-content/70">
+                                    <i class="ti ti-dots nav-small-cap-icon text-lg hidden text-center"></i>
+                                    <span>HOME</span>
+                                </li>
+
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link gap-3 py-3 px-3 rounded-md w-full flex items-center hover:text-primary hover:bg-primary/15"
+                                       asp-area="Admin" asp-controller="Dashboard" asp-action="Index">
+                                        <i class="ti ti-layout-dashboard text-xl"></i>
+                                        <span>Dashboard</span>
+                                    </a>
+                                </li>
+
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link gap-3 py-3 px-3 rounded-md w-full flex items-center hover:text-primary hover:bg-primary/15"
+                                       asp-area="" asp-controller="Home" asp-action="Index">
+                                        <i class="ti ti-layout-grid text-xl"></i>
+                                        <span>Web-site</span>
+                                    </a>
+                                </li>
+
+                                <li class="mb-3 text-xs font-bold pt-6 pb-4 uppercase tracking-wide text-base-content/70">
+                                    <i class="ti ti-dots nav-small-cap-icon text-lg hidden text-center"></i>
+                                    <span>HOTELS</span>
+                                </li>
+
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link gap-3 py-3 px-3 rounded-md w-full flex items-center hover:text-primary hover:bg-primary/15"
+                                       asp-area="Admin" asp-controller="Hotels" asp-action="Index">
+                                        <i class="ti ti-building-skyscraper text-xl"></i>
+                                        <span>All Hotels</span>
+                                    </a>
+                                </li>
+
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link gap-3 py-3 px-3 rounded-md w-full flex items-center hover:text-primary hover:bg-primary/15"
+                                       asp-area="Admin" asp-controller="Hotels" asp-action="Create">
+                                        <i class="ti ti-plus text-xl"></i>
+                                        <span>Create Hotel</span>
+                                    </a>
+                                </li>
+
+                                <li class="text-xs font-bold pt-6 pb-4 uppercase tracking-wide text-base-content/70">
+                                    <i class="ti ti-dots nav-small-cap-icon text-lg hidden text-center"></i>
+                                    <span>BOOKINGS</span>
+                                </li>
+
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link gap-3 py-3 px-3 rounded-md w-full flex items-center hover:text-primary hover:bg-primary/15"
+                                       asp-area="Admin" asp-controller="Bookings" asp-action="Index">
+                                        <i class="ti ti-calendar-check text-xl"></i>
+                                        <span>All Bookings</span>
+                                    </a>
+                                </li>
+
+                                <li class="text-xs font-bold pt-6 pb-4 uppercase tracking-wide text-base-content/70">
+                                    <span>ACCOUNT</span>
+                                </li>
+
+                                <li class="sidebar-item">
+                                    <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" class="w-full">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit"
+                                                class="sidebar-link gap-3 py-3 px-3 rounded-md w-full flex items-center hover:text-error hover:bg-error/10 transition">
+                                            <i class="ti ti-logout text-xl text-error"></i>
+                                            <span>Logout</span>
+                                        </button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </aside>
+            <div class=" w-full page-wrapper overflow-hidden">
+                <main class="h-full overflow-y-auto  max-w-full  pt-4">
+                    <div class="container full-container py-5 flex flex-col gap-6">
+                        @RenderBody()
+                    </div>
+                </main>
+            </div>
+        </div>
+    </main>
+    <script src="~/admin/libs/jquery/dist/jquery.min.js"></script>
+    <script src="~/admin/libs/simplebar/dist/simplebar.min.js"></script>
+    <script src="~/admin/libs/iconify-icon/dist/iconify-icon.min.js"></script>
+    <script src="~/admin/libs/preline/dist/preline.js"></script>
+    <script src="~/admin/libs/@@preline/dropdown/index.js"></script>
+    <script src="~/admin/libs/@@preline/overlay/index.js"></script>
+    <script src="~/admin/js/sidebarmenu.js"></script>
+    <script src="~/admin/libs/apexcharts/dist/apexcharts.min.js"></script>
+    <script src="~/admin/js/dashboard.js"></script>
+</body>
+</html>

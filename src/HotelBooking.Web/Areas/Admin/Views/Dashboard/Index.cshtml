@@ -1,2 +1,244 @@
-﻿<h2>Admin page: Dashboard</h2>
-<a asp-area="Customer" asp-controller="Home" asp-action="Index">Back to main</a>
+﻿@{
+	Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="grid grid-cols-1 lg:grid-cols-3 lg:gap-x-6 gap-x-0 lg:gap-y-0 gap-y-6">
+	<div class="col-span-2">
+		<div class="card">
+			<div class="card-body">
+				<div class="sm:flex block justify-between mb-5">
+					<h4 class="text-dark text-lg font-semibold sm:mb-0 mb-2">
+						Sales
+						Overview
+					</h4>
+					<select name="cars" id="cars"
+							class=" border-gray-400/20 text-gray-500 rounded-md text-sm border-[1px] focus:ring-0 sm:w-auto w-full">
+						<option value="volvo">March 2025</option>
+						<option value="saab">April 2025</option>
+						<option value="mercedes">May 2025</option>
+						<option value="audi">June 2025</option>
+					</select>
+				</div>
+				<div id="chart"></div>
+			</div>
+		</div>
+	</div>
+
+	<div class="flex flex-col gap-6">
+		<div class="card">
+			<div class="card-body">
+				<h4 class="text-dark text-lg font-semibold mb-5">Yearly Breakup</h4>
+				<div class="flex gap-6 items-center justify-between">
+					<div class="flex flex-col gap-4">
+						<h3 class="text-[21px] font-semibold text-dark">$36,358</h3>
+						<div class="flex items-center gap-1">
+							<span class="flex items-center justify-center w-5 h-5 rounded-full bg-success/20">
+								<i class="ti ti-arrow-up-left text-success"></i>
+							</span>
+							<p class="text-dark text-sm font-normal ">+9%</p>
+							<p class="text-gray-500 text-sm font-normal text-nowrap">
+								last
+								year
+							</p>
+						</div>
+						<div class="flex gap-3">
+							<div class="flex gap-2 items-center">
+								<span class="w-2 h-2 rounded-full bg-primary"></span>
+								<p class="text-gray-500 font-normal text-xs">2024</p>
+							</div>
+							<div class="flex gap-2 items-center">
+								<span class="w-2 h-2 rounded-full bg-gray-500/20"></span>
+								<p class="text-gray-500 font-normal text-xs">2025</p>
+							</div>
+						</div>
+					</div>
+					<div class="flex  items-center">
+						<div id="breakup"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="card">
+			<div class="card-body">
+				<div class="flex gap-6 items-center justify-between">
+					<div class="flex flex-col gap-5">
+						<h4 class="text-dark text-lg font-semibold">Monthly Earnings</h4>
+						<div class="flex flex-col gap-[18px]">
+							<h3 class="text-[21px] font-semibold text-dark">$6,820</h3>
+							<div class="flex items-center gap-1">
+								<span class="flex items-center justify-center w-5 h-5 rounded-full bg-error/20">
+									<i class="ti ti-arrow-down-right text-error"></i>
+								</span>
+								<p class="text-dark text-sm font-normal ">+9%</p>
+								<p class="text-gray-500 text-sm font-normal">last year</p>
+							</div>
+						</div>
+					</div>
+
+					<div class="w-11 h-11 flex justify-center items-center rounded-full bg-info text-white self-start">
+						<i class="ti ti-currency-dollar text-xl"></i>
+					</div>
+
+				</div>
+			</div>
+			<div id="earning"></div>
+		</div>
+	</div>
+
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 lg:gap-x-6 gap-x-0 lg:gap-y-0 gap-y-6">
+	<div class="col-span-2">
+		<div class="card ">
+			<div class="card-body">
+
+				<div class="sm:flex block justify-between mb-5">
+					<div>
+						<h4 class="text-dark text-lg font-semibold sm:mb-0 mb-2">
+							Top
+							Performers
+						</h4>
+						<p class="text-gray-500 text-sm">Best Employees</p>
+					</div>
+					<div>
+						<select name="cars" id="cars"
+								class=" border-gray-400/20 text-gray-500 rounded-md text-sm border-[1px] focus:ring-0 sm:w-auto w-full">
+							<option value="volvo">March 2025</option>
+							<option value="saab">April 2025</option>
+							<option value="mercedes">May 2025</option>
+							<option value="audi">June 2025</option>
+						</select>
+					</div>
+				</div>
+				<div class="relative overflow-x-auto">
+					<table class="text-left w-full whitespace-nowrap text-sm my-2.5">
+						<thead class="text-gray-700">
+							<tr class="font-semibold text-dark">
+
+								<th scope="col" class="p-4">Assigned</th>
+								<th scope="col" class="p-4">Project</th>
+								<th scope="col" class="p-4">Priority</th>
+								<th scope="col" class="p-4">Budget</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr class="border-b border-gray-400/10">
+
+								<td class="p-4">
+									<div class="flex gap-3 items-center">
+										<img class="object-cover w-9 h-9 rounded-full "
+											 src="../assets/images/profile/user-2.jpg" alt
+											 aria-hidden="true">
+										<div>
+											<h3 class=" font-semibold text-dark">Sunil Joshi</h3>
+											<span class="font-normal text-gray-500 text-xs">
+												Web
+												Designer
+											</span>
+										</div>
+									</div>
+								</td>
+								<td class="p-4">
+									<span class="font-normal  text-gray-500">Elite Admin</span>
+								</td>
+								<td class="p-4">
+									<span class="inline-flex items-center py-[3px] px-[10px] rounded-md font-medium bg-primary text-white">Low</span>
+								</td>
+								<td class="p-4">
+									<span class="font-semibold text-base text-dark">$3.9</span>
+								</td>
+							</tr>
+							<tr class="border-b border-gray-400/10">
+
+								<td class="p-4">
+									<div class="flex gap-3 items-center">
+										<img class="object-cover w-9 h-9 rounded-full "
+											 src="../assets/images/profile/user-3.jpg" alt
+											 aria-hidden="true">
+										<div>
+											<h3 class="font-semibold text-dark">Andrew McDownland</h3>
+											<span class="font-normal text-gray-500 text-xs">
+												Project
+												Manager
+											</span>
+										</div>
+									</div>
+								</td>
+								<td class="p-4">
+									<span class="font-normal text-gray-500">
+										Real Homes WP
+										Theme
+									</span>
+								</td>
+								<td class="p-4">
+									<span class="inline-flex items-center py-[3px] px-[10px] rounded-md font-medium text-white bg-info">Medium</span>
+								</td>
+								<td class="p-4">
+									<span class="font-semibold text-base text-dark">$24.5k</span>
+								</td>
+							</tr>
+							<tr class="border-b border-gray-400/10">
+
+								<td class="p-4">
+									<div class="flex gap-3 items-center">
+										<img class="object-cover w-9 h-9 rounded-full "
+											 src="../assets/images/profile/user-4.jpg" alt
+											 aria-hidden="true">
+										<div>
+											<h3 class="font-semibold text-dark">Christopher Jamil</h3>
+											<span class="font-normal text-xs text-gray-500">
+												Project
+												Manager
+											</span>
+										</div>
+									</div>
+								</td>
+								<td class="p-4">
+									<span class="font-normal text-gray-500">
+										MedicalPro WP
+										Theme
+									</span>
+								</td>
+								<td class="p-4 ">
+									<span class="inline-flex items-center py-[3px] px-[10px] rounded-md font-medium text-white bg-error">High</span>
+								</td>
+								<td class="p-4">
+									<span class="font-semibold text-base text-dark">$12.8k</span>
+								</td>
+							</tr>
+							<tr>
+
+								<td class="p-4">
+									<div class="flex gap-3 items-center">
+										<img class="object-cover w-9 h-9 rounded-full "
+											 src="../assets/images/profile/user-5.jpg" alt
+											 aria-hidden="true">
+										<div>
+											<h3 class="font-semibold text-dark">Nirav Joshi</h3>
+											<span class="font-normal text-xs text-gray-500">
+												Frontend
+												Engineer
+											</span>
+										</div>
+									</div>
+								</td>
+								<td class="p-4">
+									<span class="font-normal text-sm text-gray-500">
+										Hosting Press
+										HTML
+									</span>
+								</td>
+								<td class="p-4">
+									<span class="inline-flex items-center py-[3px] px-[10px] rounded-md font-medium text-white bg-success">Critical</span>
+								</td>
+								<td class="p-4">
+									<span class="font-semibold text-base text-dark">$2.4k</span>
+								</td>
+							</tr>
+
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
