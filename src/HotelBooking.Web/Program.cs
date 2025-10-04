@@ -7,9 +7,10 @@ using Microsoft.Extensions.DependencyInjection;
 var builder = WebApplication.CreateBuilder(args);
 
 var cs = builder.Configuration.GetConnectionString("Default")
-         ?? "Server=127.0.0.1;Port=3306;Database=hotelbooking;User Id=hb_app;Password=StrongP@ss123;TreatTinyAsBoolean=true;AllowPublicKeyRetrieval=True;";
+         ?? (Environment.GetEnvironmentVariable("DOCKER_ENV") == "true"
+             ? "Server=db;Port=3306;Database=hotelbooking_db;User Id=hotel_app;Password=HotelApp2025!;TreatTinyAsBoolean=true;AllowPublicKeyRetrieval=True;"
+             : "Server=127.0.0.1;Port=3306;Database=hotelbooking;User Id=hb_app;Password=StrongP@ss123;TreatTinyAsBoolean=true;AllowPublicKeyRetrieval=True;");
 
-// прошиваємо cs у конфіг, щоб його бачив cfg.GetConnectionString("Default")
 builder.Configuration.AddInMemoryCollection(new Dictionary<string, string?>
 {
     ["ConnectionStrings:Default"] = cs

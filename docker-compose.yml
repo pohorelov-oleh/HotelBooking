@@ -4,12 +4,28 @@ services:
     container_name: hotelbooking-db
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: hotelbooking
-      MYSQL_USER: hb_app
-      MYSQL_PASSWORD: StrongP@ss123
+      MYSQL_ROOT_PASSWORD: HotelBooking2025!
+      MYSQL_DATABASE: hotelbooking_db
+      MYSQL_USER: hotel_app
+      MYSQL_PASSWORD: HotelApp2025!
     ports:
-      - "3306:3306"
+      - "3307:3306"
+    networks:
+      - hotelnet
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  app:
+    build: .
+    container_name: hotelbooking-app
+    restart: always
+    ports:
+      - "5001:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__Default=Server=db;Port=3306;Database=hotelbooking_db;User Id=hotel_app;Password=HotelApp2025!;TreatTinyAsBoolean=true;AllowPublicKeyRetrieval=True;
+    depends_on:
+      - db
     networks:
       - hotelnet
 
@@ -18,9 +34,12 @@ services:
     container_name: hotelbooking-adminer
     restart: always
     ports:
-      - "8080:8080"
+      - "8081:8080"
     networks:
       - hotelnet
+
+volumes:
+  mysql_data:
 
 networks:
   hotelnet:

@@ -1,15 +1,19 @@
 ﻿@model HotelBooking.Web.Areas.Admin.Models.DashboardVM
 @using System.Linq
+@using System.Globalization
+
 @{
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
 
+@functions {
+    static readonly CultureInfo Usd = CultureInfo.GetCultureInfo("en-US");
+    static string FmtUsd(decimal v) => v.ToString("C", Usd);
+    string MonthLabel(int y, int m) => new DateTime(y, m, 1).ToString("MMM yyyy");
+}
+
 <div class="-mx-6 lg:-mx-8">
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        @functions {
-            string MonthLabel(int y, int m) => new DateTime(y, m, 1).ToString("MMM yyyy");
-        }
-
         <div class="card">
             <div class="card-body">
                 <h4 class="text-dark text-lg font-semibold mb-5">Monthly Revenue (Check-In)</h4>
@@ -20,7 +24,7 @@
                             var current = (months != null && months.Count > 0) ? months[^1] : null;
                         }
                         <h3 class="text-[21px] font-semibold text-dark">
-                            @(current?.Revenue.ToString("C") ?? "—")
+                            @(current is null ? "—" : FmtUsd(current.Revenue))
                         </h3>
                         <div class="flex gap-3 flex-wrap">
                             @foreach (var p in months)
@@ -28,7 +32,7 @@
                                 <div class="flex gap-2 items-center">
                                     <span class="w-2 h-2 rounded-full bg-primary"></span>
                                     <p class="text-gray-500 font-normal text-xs">
-                                        @MonthLabel(p.Year, p.Month): @p.Revenue.ToString("C")
+                                        @MonthLabel(p.Year, p.Month): @FmtUsd(p.Revenue)
                                     </p>
                                 </div>
                             }
@@ -44,7 +48,7 @@
                     <div class="flex flex-col gap-5">
                         <h4 class="text-dark text-lg font-semibold">This Week Revenue</h4>
                         <div class="flex flex-col gap-[18px]">
-                            <h3 class="text-[21px] font-semibold text-dark">@Model.WeeklyRevenue.ToString("C")</h3>
+                            <h3 class="text-[21px] font-semibold text-dark">@FmtUsd(Model.WeeklyRevenue)</h3>
                             <div class="text-gray-500 text-sm">Monday–Sunday, confirmed & completed</div>
                         </div>
                     </div>
@@ -104,7 +108,7 @@
                                         </span>
                                     </td>
                                     <td class="p-4">
-                                        <span class="font-semibold text-dark">@b.TotalPrice.ToString("C")</span>
+                                        <span class="font-semibold text-dark">@FmtUsd(b.TotalPrice)</span>
                                     </td>
                                     <td class="p-4">
                                         @{
