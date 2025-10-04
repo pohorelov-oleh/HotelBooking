@@ -1,14 +1,58 @@
 ﻿@model HotelBooking.Web.Models.CreateBookingVm
 
-<h2>Booking</h2>
-<form method="post">
-    <input type="hidden" name="RoomId" value="@Model.RoomId" />
+@{
+    ViewData["Title"] = "Create Booking";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
 
-    <label>Check-in</label>
-    <input type="date" name="CheckIn" value="@Model.CheckIn.ToString("yyyy-MM-dd")" />
+<style>
+    .booking-section {
+        margin-top: 6rem;
+    }
+</style>
 
-    <label>Check-out</label>
-    <input type="date" name="CheckOut" value="@Model.CheckOut.ToString("yyyy-MM-dd")" />
+<section class="bg-base-100 py-12 booking-section">
+    <div class="mx-auto max-w-[1280px] px-4 sm:px-6 lg:px-8">
+        <div class="mx-auto w-full max-w-2xl">
+            <div class="card card-border shadow-none">
+                <div class="card-body gap-6">
+                    <h2 class="text-base-content text-2xl font-semibold">Booking</h2>
 
-    <button type="submit">Confirm</button>
-</form>
+                    <form method="post" class="grid gap-6">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="RoomId" value="@Model.RoomId" />
+
+                        <div class="grid gap-4 md:grid-cols-2">
+                            <div>
+                                <label class="label-text" for="CheckIn">Check-in</label>
+                                <div class="input input-lg">
+                                    <input id="CheckIn" type="text" name="CheckIn"
+                                           value="@Model.CheckIn.ToString("yyyy-MM-dd")"
+                                           class="flatpickr-date grow" required />
+                                    <span class="icon-[tabler--calendar-event] size-5 shrink-0"></span>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="label-text" for="CheckOut">Check-out</label>
+                                <div class="input input-lg">
+                                    <input id="CheckOut" type="text" name="CheckOut"
+                                           value="@Model.CheckOut.ToString("yyyy-MM-dd")"
+                                           class="flatpickr-date grow" required />
+                                    <span class="icon-[tabler--calendar-time] size-5 shrink-0"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div asp-validation-summary="All" class="text-error"></div>
+
+                        <div class="flex items-center gap-3">
+                            <a asp-area="" asp-controller="Hotels" asp-action="Search" class="btn btn-outline">Back</a>
+                            <button type="submit" class="btn btn-primary btn-gradient">Confirm</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

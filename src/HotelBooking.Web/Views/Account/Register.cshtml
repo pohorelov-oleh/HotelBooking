@@ -1,6 +1,47 @@
-﻿<form method="post" asp-action="Register">
-    <input name="fullName" type="text" placeholder="Name" />
-    <input name="email" type="email" placeholder="Email" required />
-    <input name="password" type="password" placeholder="Password" required />
-    <button type="submit">Register</button>
-</form>
+﻿<style>
+    .register-section {
+        margin-top: 6rem;
+    }
+</style>
+
+<section class="bg-base-100 py-12 register-section">
+    <div class="mx-auto max-w-[1280px] px-4 sm:px-6 lg:px-8">
+        <div class="mx-auto w-full max-w-md">
+            <div class="card card-border shadow-none">
+                <div class="card-body gap-5">
+                    <h2 class="text-base-content text-2xl font-semibold">Register</h2>
+
+                    <form method="post" asp-action="Register" class="space-y-4">
+                        @Html.AntiForgeryToken()
+
+                        <div class="input input-lg">
+                            <input name="fullName" type="text" class="grow" placeholder="Name" />
+                            <span class="icon-[tabler--user] size-5 shrink-0"></span>
+                        </div>
+
+                        <div class="input input-lg">
+                            <input name="email" type="email" class="grow" placeholder="Email" required />
+                            <span class="icon-[tabler--mail] size-5 shrink-0"></span>
+                        </div>
+
+                        <div class="input input-lg">
+                            <input name="password" type="password" class="grow" placeholder="Password" required />
+                            <span class="icon-[tabler--lock] size-5 shrink-0"></span>
+                        </div>
+
+                        <div asp-validation-summary="All" class="text-error"></div>
+
+                        <button type="submit" class="btn btn-primary btn-gradient w-full">
+                            Register
+                            <span class="icon-[tabler--arrow-right] size-5 rtl:rotate-180"></span>
+                        </button>
+                    </form>
+
+                    <div class="text-center">
+                        <a asp-action="Login" class="link link-primary">Already have account</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

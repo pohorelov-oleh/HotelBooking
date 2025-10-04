@@ -1,52 +1,223 @@
 ﻿@model HotelBooking.Web.Models.SearchRoomsVm
 
-<h2>Search for Rooms</h2>
-<form method="post">
-    <input name="City" value="@Model.City" placeholder="City" required />
-    <input type="date" name="CheckIn" value="@(Model.CheckIn?.ToString("yyyy-MM-dd"))" required />
-    <input type="date" name="CheckOut" value="@(Model.CheckOut?.ToString("yyyy-MM-dd"))" required />
-    <input type="number" name="Capacity" value="@Model.Capacity" min="1" required placeholder="Number of Guests" />
-    <button type="submit">Search</button>
-</form>
+<section class="bg-base-100 py-8 sm:py-16 lg:py-24">
+  <div class="mx-auto max-w-[1280px] px-4 sm:px-6 lg:px-8">
 
-@if (Model.Results?.Count > 0)
-{
-    <h3>Available Rooms</h3>
-    <table>
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Capacity</th>
-                <th>Price per Night</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var r in Model.Results)
-            {
-                <tr>
-                    <td>@r.Name</td>
-                    <td>@r.Capacity</td>
-                    <td>@r.PricePerNight</td>
-                    <td>
-                        @if (User.Identity?.IsAuthenticated == true)
+    <h2 class="text-base-content mb-6 text-2xl font-semibold md:text-3xl">Search for Rooms</h2>
+
+    <form asp-action="Search" method="post" class="card card-border mb-8">
+      @Html.AntiForgeryToken()
+
+      <div class="card-body grid gap-4 md:grid-cols-2 lg:grid-cols-5">
+
+        <div>
+            <label class="label-text" for="City">City</label>
+            <div class="input input-lg">
+                <select id="City" name="City" class="grow" required>
+                    @if (string.IsNullOrWhiteSpace(Model.City))
+                    {
+                        <option value="" selected disabled>Select a city</option>
+                    }
+                    else
+                    {
+                        <option value="" disabled>Select a city</option>
+                    }
+
+                    @foreach (var c in Model.CityOptions)
+                    {
+                        if (Model.City == c)
                         {
-                            <a asp-area="Customer" asp-controller="Bookings" asp-action="Create"
-                               asp-route-roomId="@r.Id"
-                               asp-route-checkIn="@(Model.CheckIn?.ToString())"
-                               asp-route-checkOut="@(Model.CheckOut?.ToString())">
-                                Book Now
-                            </a>
+                            <option value="@c" selected>@c</option>
                         }
                         else
                         {
-                            <a asp-controller="Account" asp-action="Login" asp-route-returnUrl="@Url.Action("Search", "Hotels")">
-                                Log in to Book
-                            </a>
+                            <option value="@c">@c</option>
                         }
-                    </td>
-                </tr>
+                    }
+                </select>
+                <span class="icon-[tabler--map-pin] size-5 shrink-0"></span>
+            </div>
+        </div>
+
+        <div>
+            <label class="label-text" for="Capacity">Guests</label>
+            <div class="input input-lg">
+                <select id="Capacity" name="Capacity" class="grow" required>
+                    @if ((Model.CapacityOptions?.Count ?? 0) > 0)
+                    {
+                        if (Model.Capacity is null)
+                        {
+                            <option value="" selected disabled>Select guests</option>
+                        }
+                        else
+                        {
+                            <option value="" disabled>Select guests</option>
+                        }
+
+                        @foreach (var n in Model.CapacityOptions)
+                        {
+                            if (Model.Capacity == n)
+                            {
+                                <option value="@n" selected>@n</option>
+                            }
+                            else
+                            {
+                                <option value="@n">@n</option>
+                            }
+                        }
+                    }
+                    else
+                    {
+                        <option value="" selected disabled>Select city first</option>
+                    }
+                </select>
+                <span class="icon-[tabler--users] size-5 shrink-0"></span>
+            </div>
+        </div>
+        
+        <div>
+          <label class="label-text" for="CheckIn">Check-in</label>
+          <div class="input input-lg">
+            <input id="CheckIn" type="text" name="CheckIn"
+                   value="@(Model.CheckIn?.ToString("yyyy-MM-dd"))"
+                   class="flatpickr-date grow" required />
+            <span class="icon-[tabler--calendar-event] size-5 shrink-0"></span>
+          </div>
+        </div>
+
+        <div>
+          <label class="label-text" for="CheckOut">Check-out</label>
+          <div class="input input-lg">
+            <input id="CheckOut" type="text" name="CheckOut"
+                   value="@(Model.CheckOut?.ToString("yyyy-MM-dd"))"
+                   class="flatpickr-date grow" required />
+            <span class="icon-[tabler--calendar-event] size-5 shrink-0"></span>
+          </div>
+        </div>
+
+        <div class="self-end">
+          <button type="submit" class="btn btn-primary btn-gradient w-full">
+            Search
+            <span class="icon-[tabler--arrow-right] size-5 rtl:rotate-180"></span>
+          </button>
+        </div>
+      </div>
+
+      <div asp-validation-summary="All" class="text-error px-6 pb-4"></div>
+    </form>
+
+        @if (Model.Results?.Count > 0)
+        {
+            <h3 class="text-base-content mb-4 text-xl font-semibold">Available Rooms</h3>
+
+            <div class="overflow-x-auto rounded-box border border-base-content/20">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Capacity</th>
+                            <th>Price per Night</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var r in Model.Results)
+                        {
+                            <tr>
+                                <td>@r.Name</td>
+                                <td>@r.Capacity</td>
+                                <td>@r.PricePerNight</td>
+                                <td class="text-right">
+                                    @if (User.Identity?.IsAuthenticated == true)
+                                    {
+                                        <a class="btn btn-primary btn-sm"
+                                           asp-area="Customer" asp-controller="Bookings" asp-action="Create"
+                                           asp-route-roomId="@r.Id"
+                                           asp-route-checkIn="@(Model.CheckIn?.ToString("O"))"
+                                           asp-route-checkOut="@(Model.CheckOut?.ToString("O"))">
+                                            Book Now
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <a class="link link-primary"
+                                           asp-controller="Account" asp-action="Login"
+                                           asp-route-returnUrl="@Url.Action("Search", "Hotels")">
+                                            Log in to Book
+                                        </a>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else if (Model.CheckIn != null && Model.CheckOut != null)
+        {
+            <div class="alert mt-4">
+                <span class="icon-[tabler--search] size-5"></span>
+                <span>No rooms found for your dates.</span>
+            </div>
+        }
+
+  </div>
+</section>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+          const cityEl = document.getElementById('City');
+          const inEl   = document.getElementById('CheckIn');
+          const outEl  = document.getElementById('CheckOut');
+          const capEl  = document.getElementById('Capacity');
+
+          const setOptions = (el, opts, current) => {
+            el.innerHTML = '';
+            if (!opts || !opts.length) {
+              el.add(new Option('No capacity available', ''));
+              el.options[0].disabled = true; el.options[0].selected = true;
+              return;
             }
-        </tbody>
-    </table>
+            el.add(new Option('Select guests', ''));
+            el.options[0].disabled = true;
+            opts.forEach(v => el.add(new Option(v, v)));
+            if (current) {
+              [...el.options].forEach(o => { if (o.value == current) o.selected = true; });
+            } else {
+              el.selectedIndex = 0;
+            }
+          };
+
+          async function reloadCapacities() {
+            const city = cityEl.value?.trim();
+            if (!city) { setOptions(capEl, []); return; }
+
+            const url = '@Url.Action("CapacityOptions", "Hotels")'
+              + '?city=' + encodeURIComponent(city)
+              + '&checkIn=' + encodeURIComponent(inEl.value || '')
+              + '&checkOut=' + encodeURIComponent(outEl.value || '');
+
+            try {
+              const current = capEl.value;
+              capEl.disabled = true;
+              capEl.innerHTML = '<option selected>Loading…</option>';
+              const res = await fetch(url, { headers: { 'Accept': 'application/json' } });
+              const data = await res.json();
+              setOptions(capEl, data, current);
+            } catch (e) {
+              console.warn(e);
+              setOptions(capEl, []);
+            } finally {
+              capEl.disabled = false;
+            }
+          }
+
+          cityEl.addEventListener('change', reloadCapacities);
+          inEl.addEventListener('change', reloadCapacities);
+          outEl.addEventListener('change', reloadCapacities);
+
+          if (cityEl.value) reloadCapacities();
+        });
+    </script>
 }

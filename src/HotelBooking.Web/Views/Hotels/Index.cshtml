@@ -1,15 +1,48 @@
 ﻿@model HotelBooking.Web.Models.HotelListVm
-<h2>Hotels</h2>
-<ul>
-	@foreach (var h in Model.Hotels)
-	{
-		<li>
-			<strong>@h.Name</strong> — @h.City, @h.Address
-			@if (!string.IsNullOrEmpty(h.Description))
-			{
-				<div>@h.Description</div>
-			}
-		</li>
-	}
-</ul>
-<a asp-controller="Hotels" asp-action="Search">Search rooms</a>
+
+<section class="bg-base-100 py-8 sm:py-16 lg:py-24">
+    <div class="mx-auto max-w-[1280px] px-4 sm:px-6 lg:px-8">
+
+        <div class="mb-8 flex items-center justify-between gap-4">
+            <h2 class="text-base-content text-2xl font-semibold md:text-3xl">Hotels</h2>
+            <a asp-controller="Hotels" asp-action="Search" class="btn btn-primary btn-gradient">
+                Search rooms
+                <span class="icon-[tabler--arrow-right] size-5 rtl:rotate-180"></span>
+            </a>
+        </div>
+
+        @if ((Model?.Hotels?.Count ?? 0) == 0)
+        {
+            <div class="alert alert-soft">
+                <span class="icon-[tabler--info-circle] size-5"></span>
+                <span>No hotels yet.</span>
+            </div>
+        }
+        else
+        {
+            <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                @foreach (var h in Model.Hotels)
+                {
+                    <div class="card card-border shadow-none h-full">
+                        <div class="card-body gap-2">
+                            <h3 class="card-title text-xl">@h.Name</h3>
+                            <p class="text-base-content/80">@h.City, @h.Address</p>
+
+                            @if (!string.IsNullOrEmpty(h.Description))
+                            {
+                                <p class="text-base-content/80">@h.Description</p>
+                            }
+
+                            <div class="card-actions mt-3">
+                                <a asp-controller="Hotels" asp-action="Search" asp-route-city="@h.City"
+                                   class="btn btn-outline btn-primary">
+                                    Check rooms
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</section>

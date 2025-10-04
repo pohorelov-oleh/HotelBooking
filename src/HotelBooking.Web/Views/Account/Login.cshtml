@@ -1,8 +1,42 @@
 ﻿@model string
-<form method="post" asp-action="Login">
-    <input name="email" type="email" placeholder="Email" required />
-    <input name="password" type="password" placeholder="Password" required />
-    <input type="hidden" name="returnUrl" value="@Model" />
-    <button type="submit">Login</button>
-</form>
-<a asp-action="Register">Реєстрація</a>
+
+<style>
+    .auth-section {
+        margin-top: 6rem;
+    }
+</style>
+
+
+<section class="bg-base-100 py-12 auth-section">
+        <div class="mx-auto w-full max-w-md">
+            <div class="card card-border shadow-none">
+                <div class="card-body gap-5">
+                    <h2 class="text-base-content text-2xl font-semibold">Login</h2>
+
+                    <form method="post" asp-action="Login" class="space-y-4">
+                        @Html.AntiForgeryToken()
+                        <div class="input input-lg">
+                            <input name="email" type="email" class="grow" placeholder="Email" required />
+                            <span class="icon-[tabler--mail] size-5 shrink-0"></span>
+                        </div>
+                        <div class="input input-lg">
+                            <input name="password" type="password" class="grow" placeholder="Password" required />
+                            <span class="icon-[tabler--lock] size-5 shrink-0"></span>
+                        </div>
+                        <input type="hidden" name="returnUrl" value="@Model" />
+                        <div asp-validation-summary="All" class="text-error"></div>
+
+                        <button type="submit" class="btn btn-primary btn-gradient w-full">
+                            Login
+                            <span class="icon-[tabler--arrow-right] size-5 rtl:rotate-180"></span>
+                        </button>
+                    </form>
+
+                    <div class="text-center">
+                        <a asp-action="Register" class="link link-primary">Create account</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </>
+</section>

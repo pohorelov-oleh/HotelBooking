@@ -7,4 +7,7 @@ public class SearchRoomsVm
     public DateOnly? CheckOut { get; set; }
     public int? Capacity { get; set; }
     public IReadOnlyList<RoomItemVm> Results { get; set; } = [];
+
+    public List<string> CityOptions { get; set; } = new();
+    public List<int> CapacityOptions { get; set; } = new();
 }

@@ -1,1 +1,18 @@
-﻿<h3>Access denied</h3>
+﻿<section class="bg-base-100 py-16">
+    <div class="mx-auto max-w-[1280px] px-4 sm:px-6 lg:px-8">
+        <div class="mx-auto w-full max-w-xl space-y-6 text-center">
+            <div class="alert alert-error justify-center">
+                <span class="icon-[tabler--ban] size-6"></span>
+                <div>
+                    <h3 class="text-2xl font-semibold">Access denied</h3>
+                    <p class="text-base-content/80">You don't have permission to view this page.</p>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-center gap-3">
+                <a asp-controller="Hotels" asp-action="Index" class="btn btn-outline">Back to Home</a>
+                <a asp-controller="Account" asp-action="Login" class="btn btn-primary">Login</a>
+            </div>
+        </div>
+    </div>
+</section>

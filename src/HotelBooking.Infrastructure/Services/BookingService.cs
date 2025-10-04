@@ -25,9 +25,13 @@ public class BookingService : IBookingService
 
         var overlap = await _db.Bookings.AnyAsync(b =>
             b.RoomId == roomId &&
+            (b.Status == BookingStatus.Pending || b.Status == BookingStatus.Confirmed) &&
             b.CheckIn < checkOut &&
-            checkIn < b.CheckOut, ct);
-        if (overlap) throw new InvalidOperationException("Room is not available for the selected dates.");
+            checkIn < b.CheckOut,
+            ct);
+
+        if (overlap)
+            throw new InvalidOperationException("Room is not available for the selected dates.");
 
         var nights = (checkOut.ToDateTime(TimeOnly.MinValue) - checkIn.ToDateTime(TimeOnly.MinValue)).Days;
         var total = room.PricePerNight * nights;
