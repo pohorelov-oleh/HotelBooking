@@ -1,11 +1,19 @@
 using HotelBooking.Application.Services;
 using HotelBooking.Infrastructure;
+using HotelBooking.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
 var cs = builder.Configuration.GetConnectionString("Default")
-         ?? "server=127.0.0.1;port=3306;database=hotelbooking;user=hb_app;password=StrongP@ss123;TreatTinyAsBoolean=true";
+         ?? "Server=127.0.0.1;Port=3306;Database=hotelbooking;User Id=hb_app;Password=StrongP@ss123;TreatTinyAsBoolean=true;AllowPublicKeyRetrieval=True;";
+
+// прошиваємо cs у конфіг, щоб його бачив cfg.GetConnectionString("Default")
+builder.Configuration.AddInMemoryCollection(new Dictionary<string, string?>
+{
+    ["ConnectionStrings:Default"] = cs
+});
 
 builder.Services.AddDbContext<AppDbContext>(opt =>
     opt.UseMySql(cs, ServerVersion.AutoDetect(cs), o => o.EnableRetryOnFailure()));
@@ -14,6 +22,8 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IHotelService, HotelService>();
 builder.Services.AddScoped<IBookingService, BookingService>();
 builder.Services.AddScoped<IAdminHotelService, AdminHotelService>();
+builder.Services.AddScoped<IAdminStatsService, DapperAdminStatsService>();
+
 builder.Services.AddAuthentication("app-cookie")
     .AddCookie("app-cookie", o =>
     {
