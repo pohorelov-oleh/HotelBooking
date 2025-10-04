@@ -23,14 +23,21 @@ public class BookingsController : Controller
     [HttpPost]
     public async Task<IActionResult> Create(CreateBookingVm vm, CancellationToken ct)
     {
+        var today = DateOnly.FromDateTime(DateTime.Today);
+
+        if (vm.CheckIn < today)
+        {
+            TempData["error"] = $"Check-in cannot be earlier than {today:yyyy-MM-dd}.";
+            return View(vm);
+        }
         if (vm.CheckOut <= vm.CheckIn)
         {
-            ModelState.AddModelError("", "Invalid date range.");
+            TempData["error"] = "Invalid date range. Check-out must be after check-in.";
             return View(vm);
         }
 
         if (!int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out var userId))
-            return Challenge(); // redirect to /account/login
+            return Challenge();
 
         var idem = $"{userId}:{vm.RoomId}:{vm.CheckIn}:{vm.CheckOut}:{DateTime.UtcNow.Ticks}";
 
@@ -42,7 +49,7 @@ public class BookingsController : Controller
         }
         catch (Exception ex)
         {
-            ModelState.AddModelError("", ex.Message);
+            TempData["error"] = ex.Message;
             return View(vm);
         }
     }

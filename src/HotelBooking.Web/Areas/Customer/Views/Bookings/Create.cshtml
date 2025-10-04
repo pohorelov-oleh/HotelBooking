@@ -16,6 +16,22 @@
         <div class="mx-auto w-full max-w-2xl">
             <div class="card card-border shadow-none">
                 <div class="card-body gap-6">
+
+                    @if (TempData["error"] is string err)
+                    {
+                        <div class="alert alert-error mb-6">
+                            <span class="icon-[tabler--alert-circle] size-5"></span>
+                            <span>@err</span>
+                        </div>
+                    }
+                    @if (TempData["ok"] is string ok)
+                    {
+                        <div class="alert alert-success mb-6">
+                            <span class="icon-[tabler--check] size-5"></span>
+                            <span>@ok</span>
+                        </div>
+                    }
+
                     <h2 class="text-base-content text-2xl font-semibold">Booking</h2>
 
                     <form method="post" class="grid gap-6">

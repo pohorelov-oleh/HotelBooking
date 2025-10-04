@@ -43,6 +43,8 @@ public class HotelsController : Controller
     [HttpPost]
     public async Task<IActionResult> Search(SearchRoomsVm vm, CancellationToken ct)
     {
+        var today = DateOnly.FromDateTime(DateTime.Today);
+
         if (string.IsNullOrWhiteSpace(vm.City) || vm.CheckIn is null || vm.CheckOut is null || vm.Capacity is null)
         {
             ModelState.AddModelError("", "Specify city, dates and capacity.");
@@ -50,6 +52,21 @@ public class HotelsController : Controller
             vm.CapacityOptions = string.IsNullOrWhiteSpace(vm.City)
                 ? new List<int>()
                 : (await _hotels.GetCapacityOptionsAsync(vm.City!, vm.CheckIn, vm.CheckOut, ct)).ToList();
+            return View(vm);
+        }
+
+        if (vm.CheckIn.Value < today)
+        {
+            TempData["error"] = $"Check-in cannot be earlier than {today:yyyy-MM-dd}.";
+            vm.CityOptions = (await _hotels.GetCitiesAsync(ct)).ToList();
+            vm.CapacityOptions = (await _hotels.GetCapacityOptionsAsync(vm.City!, vm.CheckIn, vm.CheckOut, ct)).ToList();
+            return View(vm);
+        }
+        if (vm.CheckOut.Value <= vm.CheckIn.Value)
+        {
+            TempData["error"] = "Check-out must be after check-in.";
+            vm.CityOptions = (await _hotels.GetCitiesAsync(ct)).ToList();
+            vm.CapacityOptions = (await _hotels.GetCapacityOptionsAsync(vm.City!, vm.CheckIn, vm.CheckOut, ct)).ToList();
             return View(vm);
         }
 

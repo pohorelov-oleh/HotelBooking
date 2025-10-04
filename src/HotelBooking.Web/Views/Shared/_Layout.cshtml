@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
     <meta name="robots" content="noindex, nofollow" />
     <title>Roomify</title>
-    <meta name="description" content=" FlyonUIPro is the best FlyonUI dashboard for responsive web apps. Streamline your app development process with ease." />
     <link rel="icon" type="image/x-icon" href="~/client/img/favicon/favicon.ico" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -81,7 +80,6 @@
                             {
                                 <a asp-area="" asp-controller="Account" asp-action="Login" class="btn btn-outline btn-sm">Login</a>
                             }
-
                             <button type="button" class="collapse-toggle btn btn-outline btn-secondary btn-square"
                                     data-collapse="#navbar-block-4" aria-controls="navbar-block-4" aria-label="Toggle navigation">
                                 <span class="icon-[tabler--menu-2] collapse-open:hidden size-5.5"></span>
@@ -104,13 +102,24 @@
                             {
                                 <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index" class="hover:text-primary nav-link">Admin Dashboard</a>
                             }
+                            @if (User.Identity?.IsAuthenticated == true)
+                            {
+                                <div class="max-lg:mt-4 lg:hidden">
+                                    <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" class="w-full">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-outline btn-secondary w-full">Logout</button>
+                                    </form>
+                                </div>
+                            }
                         </div>
                     </div>
 
-                    <div class="navbar-end max-lg:hidden flex gap-2">
+                    <div class="navbar-end max-lg:hidden ml-auto flex items-center gap-3">
                         @if (User.Identity?.IsAuthenticated == true)
                         {
-                            <span class="text-sm text-muted">Hello, @User.Identity!.Name</span>
+                            <span class="truncate max-w-[240px] text-sm text-base-content/70 leading-none">
+                                Hello, @User.Identity!.Name
+                            </span>
                             <a asp-area="" asp-controller="Account" asp-action="Logout" class="btn btn-outline btn-secondary">Logout</a>
                         }
                         else
