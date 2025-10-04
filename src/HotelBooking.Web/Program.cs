@@ -8,7 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 var cs = builder.Configuration.GetConnectionString("Default")
          ?? (Environment.GetEnvironmentVariable("DOCKER_ENV") == "true"
-             ? "Server=db;Port=3306;Database=hotelbooking_db;User Id=hotel_app;Password=HotelApp2025!;TreatTinyAsBoolean=true;AllowPublicKeyRetrieval=True;"
+             ? "Server=hotel-db;Port=3306;Database=hotelbooking_db;User Id=hotel_app;Password=HotelApp2025!;TreatTinyAsBoolean=true;AllowPublicKeyRetrieval=True;"
              : "Server=127.0.0.1;Port=3306;Database=hotelbooking;User Id=hb_app;Password=StrongP@ss123;TreatTinyAsBoolean=true;AllowPublicKeyRetrieval=True;");
 
 builder.Configuration.AddInMemoryCollection(new Dictionary<string, string?>

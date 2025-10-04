@@ -1,7 +1,7 @@
 services:
-  db:
+  hotel-db:
     image: mysql:8
-    container_name: hotelbooking-db
+    container_name: hotelbooking-mysql
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: HotelBooking2025!
@@ -9,37 +9,43 @@ services:
       MYSQL_USER: hotel_app
       MYSQL_PASSWORD: HotelApp2025!
     ports:
-      - "3307:3306"
+      - "5432:3306"
     networks:
       - hotelnet
     volumes:
-      - mysql_data:/var/lib/mysql
+      - hotel_mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "hotel_app", "-pHotelApp2025!"]
+      timeout: 20s
+      retries: 10
 
-  app:
+  hotel-app:
     build: .
-    container_name: hotelbooking-app
+    container_name: hotelbooking-webapp
     restart: always
     ports:
-      - "5001:8080"
+      - "3000:8080"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__Default=Server=db;Port=3306;Database=hotelbooking_db;User Id=hotel_app;Password=HotelApp2025!;TreatTinyAsBoolean=true;AllowPublicKeyRetrieval=True;
+      - DOCKER_ENV=true
+      - ConnectionStrings__Default=Server=hotel-db;Port=3306;Database=hotelbooking_db;User Id=hotel_app;Password=HotelApp2025!;TreatTinyAsBoolean=true;AllowPublicKeyRetrieval=True;
     depends_on:
-      - db
+      hotel-db:
+        condition: service_healthy
     networks:
       - hotelnet
 
-  adminer:
+  hotel-adminer:
     image: adminer
-    container_name: hotelbooking-adminer
+    container_name: hotelbooking-dbadmin
     restart: always
     ports:
-      - "8081:8080"
+      - "9000:8080"
     networks:
       - hotelnet
 
 volumes:
-  mysql_data:
+  hotel_mysql_data:
 
 networks:
   hotelnet:
