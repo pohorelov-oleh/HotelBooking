@@ -29,21 +29,16 @@ public class AccountController : Controller
         }
 
         var claims = new List<Claim>
-        {
-            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-            new Claim(ClaimTypes.Name, user.Email),
-            new Claim(ClaimTypes.Role, user.Role.ToString())
-        };
+    {
+        new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+        new Claim(ClaimTypes.Name, user.Email),
+        new Claim(ClaimTypes.Role, user.Role.ToString())
+    };
 
         var principal = new ClaimsPrincipal(new ClaimsIdentity(claims, "app-cookie"));
         await HttpContext.SignInAsync("app-cookie", principal);
 
-        if (!string.IsNullOrWhiteSpace(returnUrl) && Url.IsLocalUrl(returnUrl))
-            return Redirect(returnUrl);
-
-        return user.Role == UserRole.Admin
-            ? RedirectToAction("Index", "Dashboard", new { area = "Admin" })
-            : RedirectToAction("Index", "Home", new { area = "Customer" });
+        return RedirectToAction("Index", "Home");
     }
 
     [HttpGet]
