@@ -6,14 +6,17 @@ using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var cs = builder.Configuration.GetConnectionString("Default")
-         ?? (Environment.GetEnvironmentVariable("DOCKER_ENV") == "true"
-             ? "Server=hotel-db;Port=3306;Database=hotelbooking_db;User Id=hotel_app;Password=HotelApp2025!;TreatTinyAsBoolean=true;AllowPublicKeyRetrieval=True;"
-             : "Server=127.0.0.1;Port=3306;Database=hotelbooking;User Id=hb_app;Password=StrongP@ss123;TreatTinyAsBoolean=true;AllowPublicKeyRetrieval=True;");
+var cs = "Server=127.0.0.1;Port=3306;Database=hotelbooking_db;User Id=hotel_app;Password=HotelApp2025!;TreatTinyAsBoolean=true;AllowPublicKeyRetrieval=True;Connection Timeout=30;";
 
 builder.Configuration.AddInMemoryCollection(new Dictionary<string, string?>
 {
     ["ConnectionStrings:Default"] = cs
+});
+
+builder.Services.AddRouting(o =>
+{
+    o.LowercaseUrls = true;
+    o.LowercaseQueryStrings = true;
 });
 
 builder.Services.AddDbContext<AppDbContext>(opt =>

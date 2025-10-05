@@ -9,7 +9,7 @@ services:
       MYSQL_USER: hotel_app
       MYSQL_PASSWORD: HotelApp2025!
     ports:
-      - "5432:3306"
+      - "3306:3306"
     networks:
       - hotelnet
     volumes:
