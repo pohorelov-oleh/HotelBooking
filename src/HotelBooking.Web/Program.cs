@@ -7,8 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 var builder = WebApplication.CreateBuilder(args);
 
 var cs = builder.Configuration.GetConnectionString("Default")
-         ?? "Server=hotel-db;Port=3306;Database=hotelbooking_db;User Id=hotel_app;Password=HotelApp2025!;TreatTinyAsBoolean=true;AllowPublicKeyRetrieval=True;Connection Timeout=30;";
-
+    ?? "Server=scp.realhost.pro;Port=3306;Database=hotelbooking;User Id=hotelbooking_id;Password=kDtdo!Lp@c%nmG7:n;TreatTinyAsBoolean=true;AllowPublicKeyRetrieval=True;Connection Timeout=30;SslMode=None;";
 
 builder.Configuration.AddInMemoryCollection(new Dictionary<string, string?>
 {
@@ -53,7 +52,7 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-await DataSeeder.SeedAsync(app.Services);
+//await DataSeeder.SeedAsync(app.Services);
 
 if (!app.Environment.IsDevelopment())
 {
