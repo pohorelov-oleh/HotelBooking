@@ -6,7 +6,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var cs = "Server=127.0.0.1;Port=3306;Database=hotelbooking_db;User Id=hotel_app;Password=HotelApp2025!;TreatTinyAsBoolean=true;AllowPublicKeyRetrieval=True;Connection Timeout=30;";
+var cs = builder.Configuration.GetConnectionString("Default")
+         ?? "Server=hotel-db;Port=3306;Database=hotelbooking_db;User Id=hotel_app;Password=HotelApp2025!;TreatTinyAsBoolean=true;AllowPublicKeyRetrieval=True;Connection Timeout=30;";
+
 
 builder.Configuration.AddInMemoryCollection(new Dictionary<string, string?>
 {
